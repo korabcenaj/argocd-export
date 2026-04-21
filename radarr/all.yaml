@@ -1,0 +1,632 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-04-19T10:01:58Z"
+    generateName: radarr-6984c89c78-
+    labels:
+      app.kubernetes.io/instance: radarr
+      app.kubernetes.io/name: radarr
+      pod-template-hash: 6984c89c78
+    name: radarr-6984c89c78-g2hgp
+    namespace: radarr
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: radarr-6984c89c78
+      uid: 4abf7850-72fc-4e7f-9353-e5a5a017c08c
+    resourceVersion: "1443094"
+    uid: ce25250b-2c14-431e-85ae-09815aaf6b04
+  spec:
+    automountServiceAccountToken: true
+    containers:
+    - env:
+      - name: TZ
+        value: UTC
+      image: ghcr.io/k8s-at-home/radarr:v4.1.0.6175
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        exec:
+          command:
+          - /usr/bin/env
+          - bash
+          - -c
+          - curl --fail localhost:7878/api/v3/system/status?apiKey=`IFS=\> && while
+            read -d \< E C; do if [[ $E = "ApiKey" ]]; then echo $C; fi; done < /config/config.xml`
+        failureThreshold: 5
+        initialDelaySeconds: 60
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 10
+      name: radarr
+      ports:
+      - containerPort: 7878
+        name: http
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        periodSeconds: 10
+        successThreshold: 1
+        tcpSocket:
+          port: 7878
+        timeoutSeconds: 1
+      resources: {}
+      startupProbe:
+        failureThreshold: 30
+        periodSeconds: 5
+        successThreshold: 1
+        tcpSocket:
+          port: 7878
+        timeoutSeconds: 1
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /config
+        name: config
+      - mountPath: /media/sene/vidjo
+        name: media
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-g7fjb
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: k8s2
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: config
+      persistentVolumeClaim:
+        claimName: radarr-config-pvc
+    - name: media
+      persistentVolumeClaim:
+        claimName: radarr-media
+    - name: kube-api-access-g7fjb
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:33:45Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-19T10:02:02Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:33:52Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:33:52Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-19T10:02:02Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://2cade1f648ff4134e7b13d12aff15abbf4cc3c8e95a774fcb040d363d4cf3002
+      image: ghcr.io/k8s-at-home/radarr:v4.1.0.6175
+      imageID: ghcr.io/k8s-at-home/radarr@sha256:4273dfaf0295968c7152d6803c2b0b8556f4feb0187311d354a8e8f4d1066e0d
+      lastState:
+        terminated:
+          containerID: containerd://efab51403702201083df604128c2f5271b007e9305a424d6b02f077a7029ae09
+          exitCode: 255
+          finishedAt: "2026-04-21T13:33:12Z"
+          reason: Unknown
+          startedAt: "2026-04-20T12:17:33Z"
+      name: radarr
+      ready: true
+      restartCount: 2
+      started: true
+      state:
+        running:
+          startedAt: "2026-04-21T13:33:45Z"
+    hostIP: 192.168.1.29
+    hostIPs:
+    - ip: 192.168.1.29
+    phase: Running
+    podIP: 10.244.2.73
+    podIPs:
+    - ip: 10.244.2.73
+    qosClass: BestEffort
+    startTime: "2026-04-19T10:02:02Z"
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: radarr
+      meta.helm.sh/release-namespace: radarr
+    creationTimestamp: "2026-04-17T11:07:22Z"
+    labels:
+      app.kubernetes.io/instance: radarr
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: radarr
+      app.kubernetes.io/version: v4.1.0.6175
+      helm.sh/chart: radarr-16.3.2
+    name: radarr
+    namespace: radarr
+    resourceVersion: "978457"
+    uid: 882427ef-2be0-4558-aaa1-3cbeee779495
+  spec:
+    clusterIP: 10.109.38.182
+    clusterIPs:
+    - 10.109.38.182
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      port: 7878
+      protocol: TCP
+      targetPort: http
+    selector:
+      app.kubernetes.io/instance: radarr
+      app.kubernetes.io/name: radarr
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "3"
+      meta.helm.sh/release-name: radarr
+      meta.helm.sh/release-namespace: radarr
+    creationTimestamp: "2026-04-17T11:07:22Z"
+    generation: 3
+    labels:
+      app.kubernetes.io/instance: radarr
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: radarr
+      app.kubernetes.io/version: v4.1.0.6175
+      helm.sh/chart: radarr-16.3.2
+    name: radarr
+    namespace: radarr
+    resourceVersion: "1323320"
+    uid: dcfd00f7-9846-451b-ac40-47d45d652158
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 3
+    selector:
+      matchLabels:
+        app.kubernetes.io/instance: radarr
+        app.kubernetes.io/name: radarr
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app.kubernetes.io/instance: radarr
+          app.kubernetes.io/name: radarr
+      spec:
+        automountServiceAccountToken: true
+        containers:
+        - env:
+          - name: TZ
+            value: UTC
+          image: ghcr.io/k8s-at-home/radarr:v4.1.0.6175
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            exec:
+              command:
+              - /usr/bin/env
+              - bash
+              - -c
+              - curl --fail localhost:7878/api/v3/system/status?apiKey=`IFS=\> &&
+                while read -d \< E C; do if [[ $E = "ApiKey" ]]; then echo $C; fi;
+                done < /config/config.xml`
+            failureThreshold: 5
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10
+          name: radarr
+          ports:
+          - containerPort: 7878
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 7878
+            timeoutSeconds: 1
+          resources: {}
+          startupProbe:
+            failureThreshold: 30
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: 7878
+            timeoutSeconds: 1
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config
+            name: config
+          - mountPath: /media/sene/vidjo
+            name: media
+        dnsPolicy: ClusterFirst
+        enableServiceLinks: true
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: default
+        serviceAccountName: default
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: radarr-config-pvc
+        - name: media
+          persistentVolumeClaim:
+            claimName: radarr-media
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-04-17T11:07:22Z"
+      lastUpdateTime: "2026-04-19T10:02:09Z"
+      message: ReplicaSet "radarr-6984c89c78" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-04-20T12:17:51Z"
+      lastUpdateTime: "2026-04-20T12:17:51Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 3
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "1"
+      deployment.kubernetes.io/revision: "1"
+      meta.helm.sh/release-name: radarr
+      meta.helm.sh/release-namespace: radarr
+    creationTimestamp: "2026-04-17T11:07:22Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/instance: radarr
+      app.kubernetes.io/name: radarr
+      pod-template-hash: 5795f4b7c9
+    name: radarr-5795f4b7c9
+    namespace: radarr
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: radarr
+      uid: dcfd00f7-9846-451b-ac40-47d45d652158
+    resourceVersion: "1006652"
+    uid: b02a1de4-1a49-4284-927a-2302948b1415
+  spec:
+    replicas: 0
+    selector:
+      matchLabels:
+        app.kubernetes.io/instance: radarr
+        app.kubernetes.io/name: radarr
+        pod-template-hash: 5795f4b7c9
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app.kubernetes.io/instance: radarr
+          app.kubernetes.io/name: radarr
+          pod-template-hash: 5795f4b7c9
+      spec:
+        automountServiceAccountToken: true
+        containers:
+        - env:
+          - name: TZ
+            value: UTC
+          image: ghcr.io/k8s-at-home/radarr:v4.1.0.6175
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            exec:
+              command:
+              - /usr/bin/env
+              - bash
+              - -c
+              - curl --fail localhost:7878/api/v3/system/status?apiKey=`IFS=\> &&
+                while read -d \< E C; do if [[ $E = "ApiKey" ]]; then echo $C; fi;
+                done < /config/config.xml`
+            failureThreshold: 5
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10
+          name: radarr
+          ports:
+          - containerPort: 7878
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 7878
+            timeoutSeconds: 1
+          resources: {}
+          startupProbe:
+            failureThreshold: 30
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: 7878
+            timeoutSeconds: 1
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        enableServiceLinks: true
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: default
+        serviceAccountName: default
+        terminationGracePeriodSeconds: 30
+  status:
+    observedGeneration: 2
+    replicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "1"
+      deployment.kubernetes.io/revision: "3"
+      meta.helm.sh/release-name: radarr
+      meta.helm.sh/release-namespace: radarr
+    creationTimestamp: "2026-04-19T10:01:58Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/instance: radarr
+      app.kubernetes.io/name: radarr
+      pod-template-hash: 6984c89c78
+    name: radarr-6984c89c78
+    namespace: radarr
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: radarr
+      uid: dcfd00f7-9846-451b-ac40-47d45d652158
+    resourceVersion: "1323315"
+    uid: 4abf7850-72fc-4e7f-9353-e5a5a017c08c
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app.kubernetes.io/instance: radarr
+        app.kubernetes.io/name: radarr
+        pod-template-hash: 6984c89c78
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app.kubernetes.io/instance: radarr
+          app.kubernetes.io/name: radarr
+          pod-template-hash: 6984c89c78
+      spec:
+        automountServiceAccountToken: true
+        containers:
+        - env:
+          - name: TZ
+            value: UTC
+          image: ghcr.io/k8s-at-home/radarr:v4.1.0.6175
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            exec:
+              command:
+              - /usr/bin/env
+              - bash
+              - -c
+              - curl --fail localhost:7878/api/v3/system/status?apiKey=`IFS=\> &&
+                while read -d \< E C; do if [[ $E = "ApiKey" ]]; then echo $C; fi;
+                done < /config/config.xml`
+            failureThreshold: 5
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10
+          name: radarr
+          ports:
+          - containerPort: 7878
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 7878
+            timeoutSeconds: 1
+          resources: {}
+          startupProbe:
+            failureThreshold: 30
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: 7878
+            timeoutSeconds: 1
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config
+            name: config
+          - mountPath: /media/sene/vidjo
+            name: media
+        dnsPolicy: ClusterFirst
+        enableServiceLinks: true
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: default
+        serviceAccountName: default
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: radarr-config-pvc
+        - name: media
+          persistentVolumeClaim:
+            claimName: radarr-media
+  status:
+    availableReplicas: 1
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "1"
+      deployment.kubernetes.io/revision: "2"
+      meta.helm.sh/release-name: radarr
+      meta.helm.sh/release-namespace: radarr
+    creationTimestamp: "2026-04-17T14:16:11Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/instance: radarr
+      app.kubernetes.io/name: radarr
+      pod-template-hash: 797dc6f775
+    name: radarr-797dc6f775
+    namespace: radarr
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: radarr
+      uid: dcfd00f7-9846-451b-ac40-47d45d652158
+    resourceVersion: "1199128"
+    uid: 4bb38d19-e324-4ed8-a8ea-16ed115ed409
+  spec:
+    replicas: 0
+    selector:
+      matchLabels:
+        app.kubernetes.io/instance: radarr
+        app.kubernetes.io/name: radarr
+        pod-template-hash: 797dc6f775
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app.kubernetes.io/instance: radarr
+          app.kubernetes.io/name: radarr
+          pod-template-hash: 797dc6f775
+      spec:
+        automountServiceAccountToken: true
+        containers:
+        - env:
+          - name: TZ
+            value: UTC
+          image: ghcr.io/k8s-at-home/radarr:v4.1.0.6175
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            exec:
+              command:
+              - /usr/bin/env
+              - bash
+              - -c
+              - curl --fail localhost:7878/api/v3/system/status?apiKey=`IFS=\> &&
+                while read -d \< E C; do if [[ $E = "ApiKey" ]]; then echo $C; fi;
+                done < /config/config.xml`
+            failureThreshold: 5
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10
+          name: radarr
+          ports:
+          - containerPort: 7878
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 7878
+            timeoutSeconds: 1
+          resources: {}
+          startupProbe:
+            failureThreshold: 30
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: 7878
+            timeoutSeconds: 1
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /media/sene/vidjo
+            name: media
+        dnsPolicy: ClusterFirst
+        enableServiceLinks: true
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: default
+        serviceAccountName: default
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: media
+          persistentVolumeClaim:
+            claimName: radarr-media
+  status:
+    observedGeneration: 2
+    replicas: 0
+kind: List
+metadata:
+  resourceVersion: ""

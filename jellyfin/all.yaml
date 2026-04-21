@@ -1,0 +1,1247 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/restartedAt: "2026-04-17T19:32:44Z"
+    creationTimestamp: "2026-04-19T12:43:56Z"
+    generateName: jellyfin-7bc6789bf-
+    labels:
+      app: jellyfin
+      pod-template-hash: 7bc6789bf
+    name: jellyfin-7bc6789bf-867fv
+    namespace: jellyfin
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: jellyfin-7bc6789bf
+      uid: 632d00a3-29ff-49b5-bfc4-df87ed5e79f2
+    resourceVersion: "1443252"
+    uid: 2399c1e9-28af-4fda-af5f-9c3db6c29392
+  spec:
+    automountServiceAccountToken: false
+    containers:
+    - env:
+      - name: JELLYFIN_CONFIG_DIR
+        value: /config
+      - name: JELLYFIN_CACHE_DIR
+        value: /cache
+      image: jellyfin/jellyfin:10.10.7
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health
+          port: 8096
+          scheme: HTTP
+        initialDelaySeconds: 30
+        periodSeconds: 30
+        successThreshold: 1
+        timeoutSeconds: 5
+      name: jellyfin
+      ports:
+      - containerPort: 8096
+        name: web
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health
+          port: 8096
+          scheme: HTTP
+        initialDelaySeconds: 10
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 5
+      resources:
+        limits:
+          cpu: "1"
+          memory: 1Gi
+        requests:
+          cpu: 250m
+          memory: 512Mi
+      securityContext:
+        allowPrivilegeEscalation: true
+        capabilities:
+          drop:
+          - ALL
+        privileged: true
+        readOnlyRootFilesystem: true
+        runAsNonRoot: false
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /dev/dri
+        name: dri
+      - mountPath: /config
+        mountPropagation: None
+        name: config
+      - mountPath: /cache
+        mountPropagation: None
+        name: cache
+      - mountPath: /media
+        mountPropagation: None
+        name: media
+        readOnly: true
+      - mountPath: /tmp
+        mountPropagation: None
+        name: tmp
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: k8s-master
+    nodeSelector:
+      kubernetes.io/hostname: k8s-master
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    shareProcessNamespace: false
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - hostPath:
+        path: /dev/dri
+        type: Directory
+      name: dri
+    - name: config
+      persistentVolumeClaim:
+        claimName: jellyfin-config
+    - name: cache
+      persistentVolumeClaim:
+        claimName: jellyfin-cache
+    - hostPath:
+        path: /media/sene/vidjo
+        type: Directory
+      name: media
+    - emptyDir: {}
+      name: tmp
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:33:32Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-19T12:43:56Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:34:02Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:34:02Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-19T12:43:56Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://944d32436923dcc7c9504ee632b7ab039fb4def6103530036deb3d8e22c14a2b
+      image: docker.io/jellyfin/jellyfin:10.10.7
+      imageID: docker.io/jellyfin/jellyfin@sha256:7ae36aab93ef9b6aaff02b37f8bb23df84bb2d7a3f6054ec8fc466072a648ce2
+      lastState:
+        terminated:
+          containerID: containerd://a9613b42fb7dc5147b7e7dfee59d5b356c011b3e3fb8d64d24d71fb90ca757a7
+          exitCode: 255
+          finishedAt: "2026-04-21T13:33:13Z"
+          reason: Unknown
+          startedAt: "2026-04-20T12:17:34Z"
+      name: jellyfin
+      ready: true
+      restartCount: 2
+      started: true
+      state:
+        running:
+          startedAt: "2026-04-21T13:33:32Z"
+    hostIP: 192.168.1.13
+    hostIPs:
+    - ip: 192.168.1.13
+    phase: Running
+    podIP: 10.244.0.82
+    podIPs:
+    - ip: 10.244.0.82
+    qosClass: Burstable
+    startTime: "2026-04-19T12:43:56Z"
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      metallb.io/ip-allocated-from-pool: first-pool
+    creationTimestamp: "2026-04-11T14:23:20Z"
+    labels:
+      app: jellyfin
+      cluster: home-lab
+      date: "2026-04-09"
+      environment: production
+      managed-by: terraform
+    name: jellyfin
+    namespace: jellyfin
+    resourceVersion: "1163426"
+    uid: 7d20a7c2-e7e9-4ec9-9450-b181bc0dbbd2
+  spec:
+    allocateLoadBalancerNodePorts: true
+    clusterIP: 10.108.228.179
+    clusterIPs:
+    - 10.108.228.179
+    externalTrafficPolicy: Cluster
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: web
+      nodePort: 31786
+      port: 8096
+      protocol: TCP
+      targetPort: 8096
+    selector:
+      app: jellyfin
+    sessionAffinity: None
+    type: LoadBalancer
+  status:
+    loadBalancer:
+      ingress:
+      - ip: 192.168.1.203
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "10"
+    creationTimestamp: "2026-04-11T14:20:44Z"
+    generation: 11
+    labels:
+      app: jellyfin
+      cluster: home-lab
+      date: "2026-04-09"
+      environment: production
+      managed-by: terraform
+    name: jellyfin
+    namespace: jellyfin
+    resourceVersion: "1323805"
+    uid: 6ae787e1-6df0-477a-a0d0-4897238cbc65
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: jellyfin
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2026-04-17T19:32:44Z"
+        creationTimestamp: null
+        labels:
+          app: jellyfin
+      spec:
+        automountServiceAccountToken: false
+        containers:
+        - env:
+          - name: JELLYFIN_CONFIG_DIR
+            value: /config
+          - name: JELLYFIN_CACHE_DIR
+            value: /cache
+          image: jellyfin/jellyfin:10.10.7
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8096
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: jellyfin
+          ports:
+          - containerPort: 8096
+            name: web
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8096
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: 250m
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: true
+            capabilities:
+              drop:
+              - ALL
+            privileged: true
+            readOnlyRootFilesystem: true
+            runAsNonRoot: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /dev/dri
+            name: dri
+          - mountPath: /config
+            mountPropagation: None
+            name: config
+          - mountPath: /cache
+            mountPropagation: None
+            name: cache
+          - mountPath: /media
+            mountPropagation: None
+            name: media
+            readOnly: true
+          - mountPath: /tmp
+            mountPropagation: None
+            name: tmp
+        dnsPolicy: ClusterFirst
+        enableServiceLinks: true
+        nodeSelector:
+          kubernetes.io/hostname: k8s-master
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        shareProcessNamespace: false
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - hostPath:
+            path: /dev/dri
+            type: Directory
+          name: dri
+        - name: config
+          persistentVolumeClaim:
+            claimName: jellyfin-config
+        - name: cache
+          persistentVolumeClaim:
+            claimName: jellyfin-cache
+        - hostPath:
+            path: /media/sene/vidjo
+            type: Directory
+          name: media
+        - emptyDir: {}
+          name: tmp
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-04-17T12:59:13Z"
+      lastUpdateTime: "2026-04-19T12:44:37Z"
+      message: ReplicaSet "jellyfin-7bc6789bf" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-04-20T12:18:12Z"
+      lastUpdateTime: "2026-04-20T12:18:12Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 11
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "4"
+      deployment.kubernetes.io/revision-history: "2"
+    creationTimestamp: "2026-04-11T14:29:37Z"
+    generation: 4
+    labels:
+      app: jellyfin
+      pod-template-hash: 5ff8d5c9d9
+    name: jellyfin-5ff8d5c9d9
+    namespace: jellyfin
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: jellyfin
+      uid: 6ae787e1-6df0-477a-a0d0-4897238cbc65
+    resourceVersion: "674698"
+    uid: 7458be36-ca4d-4bc8-aa42-df5cf5415fa7
+  spec:
+    replicas: 0
+    selector:
+      matchLabels:
+        app: jellyfin
+        pod-template-hash: 5ff8d5c9d9
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: jellyfin
+          pod-template-hash: 5ff8d5c9d9
+      spec:
+        automountServiceAccountToken: true
+        containers:
+        - env:
+          - name: JELLYFIN_CONFIG_DIR
+            value: /config
+          - name: JELLYFIN_CACHE_DIR
+            value: /cache
+          image: jellyfin/jellyfin:10.10.7
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8096
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: jellyfin
+          ports:
+          - containerPort: 8096
+            name: web
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8096
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: 250m
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            readOnlyRootFilesystem: false
+            runAsNonRoot: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config
+            mountPropagation: None
+            name: config
+          - mountPath: /cache
+            mountPropagation: None
+            name: cache
+          - mountPath: /media
+            mountPropagation: None
+            name: media
+            readOnly: true
+        dnsPolicy: ClusterFirst
+        enableServiceLinks: true
+        nodeSelector:
+          kubernetes.io/hostname: k8s-master
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        shareProcessNamespace: false
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: jellyfin-config
+        - name: cache
+          persistentVolumeClaim:
+            claimName: jellyfin-cache
+        - hostPath:
+            path: /media/sene/vidjo
+            type: Directory
+          name: media
+  status:
+    observedGeneration: 4
+    replicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "0"
+      deployment.kubernetes.io/max-replicas: "0"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-04-11T14:20:44Z"
+    generation: 2
+    labels:
+      app: jellyfin
+      pod-template-hash: 69c965644f
+    name: jellyfin-69c965644f
+    namespace: jellyfin
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: jellyfin
+      uid: 6ae787e1-6df0-477a-a0d0-4897238cbc65
+    resourceVersion: "489532"
+    uid: 9b9244ae-3589-4b0b-a4d8-12c58d257a0f
+  spec:
+    replicas: 0
+    selector:
+      matchLabels:
+        app: jellyfin
+        pod-template-hash: 69c965644f
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: jellyfin
+          pod-template-hash: 69c965644f
+      spec:
+        automountServiceAccountToken: true
+        containers:
+        - env:
+          - name: JELLYFIN_CONFIG_DIR
+            value: /config
+          - name: JELLYFIN_CACHE_DIR
+            value: /cache
+          image: jellyfin/jellyfin:10.10.7
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8096
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: jellyfin
+          ports:
+          - containerPort: 8096
+            name: web
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8096
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: 250m
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            readOnlyRootFilesystem: false
+            runAsNonRoot: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config
+            mountPropagation: None
+            name: config
+          - mountPath: /cache
+            mountPropagation: None
+            name: cache
+        dnsPolicy: ClusterFirst
+        enableServiceLinks: true
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        shareProcessNamespace: false
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: jellyfin-config
+        - name: cache
+          persistentVolumeClaim:
+            claimName: jellyfin-cache
+  status:
+    observedGeneration: 2
+    replicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "7"
+      deployment.kubernetes.io/revision-history: "5"
+    creationTimestamp: "2026-04-15T12:15:27Z"
+    generation: 4
+    labels:
+      app: jellyfin
+      pod-template-hash: 6df568c847
+    name: jellyfin-6df568c847
+    namespace: jellyfin
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: jellyfin
+      uid: 6ae787e1-6df0-477a-a0d0-4897238cbc65
+    resourceVersion: "995910"
+    uid: 4166f008-9d12-4a5c-9238-9e69907fd3fb
+  spec:
+    replicas: 0
+    selector:
+      matchLabels:
+        app: jellyfin
+        pod-template-hash: 6df568c847
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: jellyfin
+          pod-template-hash: 6df568c847
+      spec:
+        automountServiceAccountToken: false
+        containers:
+        - env:
+          - name: JELLYFIN_CONFIG_DIR
+            value: /config
+          - name: JELLYFIN_CACHE_DIR
+            value: /cache
+          image: jellyfin/jellyfin:10.10.7
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8096
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: jellyfin
+          ports:
+          - containerPort: 8096
+            name: web
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8096
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: 250m
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config
+            mountPropagation: None
+            name: config
+          - mountPath: /cache
+            mountPropagation: None
+            name: cache
+          - mountPath: /media
+            mountPropagation: None
+            name: media
+            readOnly: true
+          - mountPath: /tmp
+            mountPropagation: None
+            name: tmp
+        dnsPolicy: ClusterFirst
+        enableServiceLinks: true
+        nodeSelector:
+          kubernetes.io/hostname: k8s-master
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        shareProcessNamespace: false
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: jellyfin-config
+        - name: cache
+          persistentVolumeClaim:
+            claimName: jellyfin-cache
+        - hostPath:
+            path: /media/sene/vidjo
+            type: Directory
+          name: media
+        - emptyDir: {}
+          name: tmp
+  status:
+    observedGeneration: 4
+    replicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "10"
+    creationTimestamp: "2026-04-19T12:43:56Z"
+    generation: 1
+    labels:
+      app: jellyfin
+      pod-template-hash: 7bc6789bf
+    name: jellyfin-7bc6789bf
+    namespace: jellyfin
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: jellyfin
+      uid: 6ae787e1-6df0-477a-a0d0-4897238cbc65
+    resourceVersion: "1323803"
+    uid: 632d00a3-29ff-49b5-bfc4-df87ed5e79f2
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: jellyfin
+        pod-template-hash: 7bc6789bf
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2026-04-17T19:32:44Z"
+        creationTimestamp: null
+        labels:
+          app: jellyfin
+          pod-template-hash: 7bc6789bf
+      spec:
+        automountServiceAccountToken: false
+        containers:
+        - env:
+          - name: JELLYFIN_CONFIG_DIR
+            value: /config
+          - name: JELLYFIN_CACHE_DIR
+            value: /cache
+          image: jellyfin/jellyfin:10.10.7
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8096
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: jellyfin
+          ports:
+          - containerPort: 8096
+            name: web
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8096
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: 250m
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: true
+            capabilities:
+              drop:
+              - ALL
+            privileged: true
+            readOnlyRootFilesystem: true
+            runAsNonRoot: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /dev/dri
+            name: dri
+          - mountPath: /config
+            mountPropagation: None
+            name: config
+          - mountPath: /cache
+            mountPropagation: None
+            name: cache
+          - mountPath: /media
+            mountPropagation: None
+            name: media
+            readOnly: true
+          - mountPath: /tmp
+            mountPropagation: None
+            name: tmp
+        dnsPolicy: ClusterFirst
+        enableServiceLinks: true
+        nodeSelector:
+          kubernetes.io/hostname: k8s-master
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        shareProcessNamespace: false
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - hostPath:
+            path: /dev/dri
+            type: Directory
+          name: dri
+        - name: config
+          persistentVolumeClaim:
+            claimName: jellyfin-config
+        - name: cache
+          persistentVolumeClaim:
+            claimName: jellyfin-cache
+        - hostPath:
+            path: /media/sene/vidjo
+            type: Directory
+          name: media
+        - emptyDir: {}
+          name: tmp
+  status:
+    availableReplicas: 1
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "8"
+      deployment.kubernetes.io/revision-history: "6"
+    creationTimestamp: "2026-04-15T12:19:13Z"
+    generation: 3
+    labels:
+      app: jellyfin
+      pod-template-hash: 7dcb8b94dd
+    name: jellyfin-7dcb8b94dd
+    namespace: jellyfin
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: jellyfin
+      uid: 6ae787e1-6df0-477a-a0d0-4897238cbc65
+    resourceVersion: "1054252"
+    uid: d55f5b28-8f04-4f22-a676-f7b92406e51d
+  spec:
+    replicas: 0
+    selector:
+      matchLabels:
+        app: jellyfin
+        pod-template-hash: 7dcb8b94dd
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: jellyfin
+          pod-template-hash: 7dcb8b94dd
+      spec:
+        automountServiceAccountToken: false
+        containers:
+        - env:
+          - name: JELLYFIN_CONFIG_DIR
+            value: /config
+          - name: JELLYFIN_CACHE_DIR
+            value: /cache
+          image: jellyfin/jellyfin:10.10.7
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8096
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: jellyfin
+          ports:
+          - containerPort: 8096
+            name: web
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8096
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: 250m
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config
+            mountPropagation: None
+            name: config
+          - mountPath: /cache
+            mountPropagation: None
+            name: cache
+          - mountPath: /media
+            mountPropagation: None
+            name: media
+            readOnly: true
+          - mountPath: /tmp
+            mountPropagation: None
+            name: tmp
+        dnsPolicy: ClusterFirst
+        enableServiceLinks: true
+        nodeSelector:
+          kubernetes.io/hostname: k8s-master
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        shareProcessNamespace: false
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: jellyfin-config
+        - name: cache
+          persistentVolumeClaim:
+            claimName: jellyfin-cache
+        - hostPath:
+            path: /media/sene/vidjo
+            type: Directory
+          name: media
+        - emptyDir: {}
+          name: tmp
+  status:
+    observedGeneration: 3
+    replicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "9"
+    creationTimestamp: "2026-04-17T19:32:44Z"
+    generation: 2
+    labels:
+      app: jellyfin
+      pod-template-hash: 857bd57fc8
+    name: jellyfin-857bd57fc8
+    namespace: jellyfin
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: jellyfin
+      uid: 6ae787e1-6df0-477a-a0d0-4897238cbc65
+    resourceVersion: "1224905"
+    uid: d277e5a7-97d3-4c19-8096-be9ef1913896
+  spec:
+    replicas: 0
+    selector:
+      matchLabels:
+        app: jellyfin
+        pod-template-hash: 857bd57fc8
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2026-04-17T19:32:44Z"
+        creationTimestamp: null
+        labels:
+          app: jellyfin
+          pod-template-hash: 857bd57fc8
+      spec:
+        automountServiceAccountToken: false
+        containers:
+        - env:
+          - name: JELLYFIN_CONFIG_DIR
+            value: /config
+          - name: JELLYFIN_CACHE_DIR
+            value: /cache
+          image: jellyfin/jellyfin:10.10.7
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8096
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: jellyfin
+          ports:
+          - containerPort: 8096
+            name: web
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8096
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: 250m
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config
+            mountPropagation: None
+            name: config
+          - mountPath: /cache
+            mountPropagation: None
+            name: cache
+          - mountPath: /media
+            mountPropagation: None
+            name: media
+            readOnly: true
+          - mountPath: /tmp
+            mountPropagation: None
+            name: tmp
+        dnsPolicy: ClusterFirst
+        enableServiceLinks: true
+        nodeSelector:
+          kubernetes.io/hostname: k8s-master
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        shareProcessNamespace: false
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: jellyfin-config
+        - name: cache
+          persistentVolumeClaim:
+            claimName: jellyfin-cache
+        - hostPath:
+            path: /media/sene/vidjo
+            type: Directory
+          name: media
+        - emptyDir: {}
+          name: tmp
+  status:
+    observedGeneration: 2
+    replicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "0"
+      deployment.kubernetes.io/max-replicas: "0"
+      deployment.kubernetes.io/revision: "3"
+    creationTimestamp: "2026-04-11T14:34:52Z"
+    generation: 3
+    labels:
+      app: jellyfin
+      pod-template-hash: 8686d56c74
+    name: jellyfin-8686d56c74
+    namespace: jellyfin
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: jellyfin
+      uid: 6ae787e1-6df0-477a-a0d0-4897238cbc65
+    resourceVersion: "489534"
+    uid: e18f3a31-5d5d-429b-835c-b3d5e7b811d3
+  spec:
+    replicas: 0
+    selector:
+      matchLabels:
+        app: jellyfin
+        pod-template-hash: 8686d56c74
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2026-04-11T16:31:55+02:00"
+        creationTimestamp: null
+        labels:
+          app: jellyfin
+          pod-template-hash: 8686d56c74
+      spec:
+        automountServiceAccountToken: true
+        containers:
+        - env:
+          - name: JELLYFIN_CONFIG_DIR
+            value: /config
+          - name: JELLYFIN_CACHE_DIR
+            value: /cache
+          image: jellyfin/jellyfin:10.10.7
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8096
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: jellyfin
+          ports:
+          - containerPort: 8096
+            name: web
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8096
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: 250m
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            readOnlyRootFilesystem: false
+            runAsNonRoot: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config
+            mountPropagation: None
+            name: config
+          - mountPath: /cache
+            mountPropagation: None
+            name: cache
+          - mountPath: /media
+            mountPropagation: None
+            name: media
+            readOnly: true
+        dnsPolicy: ClusterFirst
+        enableServiceLinks: true
+        nodeSelector:
+          kubernetes.io/hostname: k8s-master
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        shareProcessNamespace: false
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: jellyfin-config
+        - name: cache
+          persistentVolumeClaim:
+            claimName: jellyfin-cache
+        - hostPath:
+            path: /media/sene/vidjo
+            type: Directory
+          name: media
+  status:
+    observedGeneration: 3
+    replicas: 0
+kind: List
+metadata:
+  resourceVersion: ""

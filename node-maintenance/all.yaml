@@ -1,0 +1,795 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-04-15T13:40:09Z"
+    generateName: configure-local-registry-
+    labels:
+      app: configure-local-registry
+      controller-revision-hash: 75c6c6d984
+      pod-template-generation: "2"
+    name: configure-local-registry-2f2bt
+    namespace: node-maintenance
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DaemonSet
+      name: configure-local-registry
+      uid: 23d3e98a-4a72-4ca6-9979-3781e7bce00c
+    resourceVersion: "1444262"
+    uid: 4e378add-9986-4949-9ea2-9a5853610ceb
+  spec:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchFields:
+            - key: metadata.name
+              operator: In
+              values:
+              - k8s3
+    containers:
+    - command:
+      - /bin/sh
+      - -c
+      - |
+        set -eu
+        apk add --no-cache util-linux
+        if [ -f /host/etc/containerd/config.toml ]; then
+          sed -i '/\[plugins\."io.containerd.grpc.v1.cri"\.registry\]/,/^\[/ s#config_path = ""#config_path = "/etc/containerd/certs.d"#' /host/etc/containerd/config.toml
+          sed -i '/\[plugins\."io.containerd.cri.v1.images"\.registry\]/,/^\[/ s#config_path = ""#config_path = "/etc/containerd/certs.d"#' /host/etc/containerd/config.toml
+        fi
+        mkdir -p /host/etc/containerd/certs.d/192.168.1.10:30500
+        cat > /host/etc/containerd/certs.d/192.168.1.10:30500/hosts.toml <<'EOF'
+        server = "http://192.168.1.10:30500"
+
+        [host."http://192.168.1.10:30500"]
+          capabilities = ["pull", "resolve", "push"]
+          skip_verify = true
+        EOF
+        nsenter --target 1 --mount --uts --ipc --net --pid sh -c 'systemctl restart containerd || systemctl restart snap.containerd.containerd || true'
+        sleep 5
+        nsenter --target 1 --mount --uts --ipc --net --pid sh -c 'systemctl is-active containerd || systemctl is-active snap.containerd.containerd || true'
+        grep -n 'config_path = "/etc/containerd/certs.d"' /host/etc/containerd/config.toml || true
+        sleep 3600
+      image: alpine:3.20
+      imagePullPolicy: IfNotPresent
+      name: configure
+      resources: {}
+      securityContext:
+        privileged: true
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /host/etc/containerd
+        name: host-etc-containerd
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-dkt5f
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    hostNetwork: true
+    hostPID: true
+    nodeName: k8s3
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - operator: Exists
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/disk-pressure
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/memory-pressure
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/pid-pressure
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/unschedulable
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/network-unavailable
+      operator: Exists
+    volumes:
+    - hostPath:
+        path: /etc/containerd
+        type: DirectoryOrCreate
+      name: host-etc-containerd
+    - name: kube-api-access-dkt5f
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:35:03Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-15T13:40:09Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:35:03Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:35:03Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-15T13:40:09Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://40dc156a1a0715579ae60f355a9eee8cf058b56cd4fb8a5bda8ab02ce2e20d8c
+      image: docker.io/library/alpine:3.20
+      imageID: docker.io/library/alpine@sha256:a4f4213abb84c497377b8544c81b3564f313746700372ec4fe84653e4fb03805
+      lastState:
+        terminated:
+          containerID: containerd://0408c7981cbb34db7d7394be7c9106748cf3793cead64252e86034421ea6e349
+          exitCode: 255
+          finishedAt: "2026-04-21T13:34:24Z"
+          reason: Unknown
+          startedAt: "2026-04-20T20:20:46Z"
+      name: configure
+      ready: true
+      restartCount: 79
+      started: true
+      state:
+        running:
+          startedAt: "2026-04-21T13:35:02Z"
+    hostIP: 192.168.1.32
+    hostIPs:
+    - ip: 192.168.1.32
+    phase: Running
+    podIP: 192.168.1.32
+    podIPs:
+    - ip: 192.168.1.32
+    qosClass: BestEffort
+    startTime: "2026-04-15T13:40:09Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-04-15T13:40:12Z"
+    generateName: configure-local-registry-
+    labels:
+      app: configure-local-registry
+      controller-revision-hash: 75c6c6d984
+      pod-template-generation: "2"
+    name: configure-local-registry-8wmxd
+    namespace: node-maintenance
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DaemonSet
+      name: configure-local-registry
+      uid: 23d3e98a-4a72-4ca6-9979-3781e7bce00c
+    resourceVersion: "1442493"
+    uid: 51e67277-2870-4cc1-8ad0-dcb047eb3c43
+  spec:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchFields:
+            - key: metadata.name
+              operator: In
+              values:
+              - k8s2
+    containers:
+    - command:
+      - /bin/sh
+      - -c
+      - |
+        set -eu
+        apk add --no-cache util-linux
+        if [ -f /host/etc/containerd/config.toml ]; then
+          sed -i '/\[plugins\."io.containerd.grpc.v1.cri"\.registry\]/,/^\[/ s#config_path = ""#config_path = "/etc/containerd/certs.d"#' /host/etc/containerd/config.toml
+          sed -i '/\[plugins\."io.containerd.cri.v1.images"\.registry\]/,/^\[/ s#config_path = ""#config_path = "/etc/containerd/certs.d"#' /host/etc/containerd/config.toml
+        fi
+        mkdir -p /host/etc/containerd/certs.d/192.168.1.10:30500
+        cat > /host/etc/containerd/certs.d/192.168.1.10:30500/hosts.toml <<'EOF'
+        server = "http://192.168.1.10:30500"
+
+        [host."http://192.168.1.10:30500"]
+          capabilities = ["pull", "resolve", "push"]
+          skip_verify = true
+        EOF
+        nsenter --target 1 --mount --uts --ipc --net --pid sh -c 'systemctl restart containerd || systemctl restart snap.containerd.containerd || true'
+        sleep 5
+        nsenter --target 1 --mount --uts --ipc --net --pid sh -c 'systemctl is-active containerd || systemctl is-active snap.containerd.containerd || true'
+        grep -n 'config_path = "/etc/containerd/certs.d"' /host/etc/containerd/config.toml || true
+        sleep 3600
+      image: alpine:3.20
+      imagePullPolicy: IfNotPresent
+      name: configure
+      resources: {}
+      securityContext:
+        privileged: true
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /host/etc/containerd
+        name: host-etc-containerd
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-m8g4j
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    hostNetwork: true
+    hostPID: true
+    nodeName: k8s2
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - operator: Exists
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/disk-pressure
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/memory-pressure
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/pid-pressure
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/unschedulable
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/network-unavailable
+      operator: Exists
+    volumes:
+    - hostPath:
+        path: /etc/containerd
+        type: DirectoryOrCreate
+      name: host-etc-containerd
+    - name: kube-api-access-m8g4j
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:33:26Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-15T13:40:12Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:33:26Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:33:26Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-15T13:40:12Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://a83b892698dae73141f4aca83c241fb98b57e9009db8219ecda8174ab09df436
+      image: docker.io/library/alpine:3.20
+      imageID: docker.io/library/alpine@sha256:a4f4213abb84c497377b8544c81b3564f313746700372ec4fe84653e4fb03805
+      lastState:
+        terminated:
+          containerID: containerd://76f37104c5406a31ddfc20dc208281ed60c3155d92472c01648c1886a0551549
+          exitCode: 255
+          finishedAt: "2026-04-21T13:33:12Z"
+          reason: Unknown
+          startedAt: "2026-04-20T20:18:34Z"
+      name: configure
+      ready: true
+      restartCount: 81
+      started: true
+      state:
+        running:
+          startedAt: "2026-04-21T13:33:25Z"
+    hostIP: 192.168.1.29
+    hostIPs:
+    - ip: 192.168.1.29
+    phase: Running
+    podIP: 192.168.1.29
+    podIPs:
+    - ip: 192.168.1.29
+    qosClass: BestEffort
+    startTime: "2026-04-15T13:40:12Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-04-15T13:40:07Z"
+    generateName: configure-local-registry-
+    labels:
+      app: configure-local-registry
+      controller-revision-hash: 75c6c6d984
+      pod-template-generation: "2"
+    name: configure-local-registry-pbvjg
+    namespace: node-maintenance
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DaemonSet
+      name: configure-local-registry
+      uid: 23d3e98a-4a72-4ca6-9979-3781e7bce00c
+    resourceVersion: "1443219"
+    uid: 9a943119-efe6-447d-80cc-59ff395efef4
+  spec:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchFields:
+            - key: metadata.name
+              operator: In
+              values:
+              - k8s
+    containers:
+    - command:
+      - /bin/sh
+      - -c
+      - |
+        set -eu
+        apk add --no-cache util-linux
+        if [ -f /host/etc/containerd/config.toml ]; then
+          sed -i '/\[plugins\."io.containerd.grpc.v1.cri"\.registry\]/,/^\[/ s#config_path = ""#config_path = "/etc/containerd/certs.d"#' /host/etc/containerd/config.toml
+          sed -i '/\[plugins\."io.containerd.cri.v1.images"\.registry\]/,/^\[/ s#config_path = ""#config_path = "/etc/containerd/certs.d"#' /host/etc/containerd/config.toml
+        fi
+        mkdir -p /host/etc/containerd/certs.d/192.168.1.10:30500
+        cat > /host/etc/containerd/certs.d/192.168.1.10:30500/hosts.toml <<'EOF'
+        server = "http://192.168.1.10:30500"
+
+        [host."http://192.168.1.10:30500"]
+          capabilities = ["pull", "resolve", "push"]
+          skip_verify = true
+        EOF
+        nsenter --target 1 --mount --uts --ipc --net --pid sh -c 'systemctl restart containerd || systemctl restart snap.containerd.containerd || true'
+        sleep 5
+        nsenter --target 1 --mount --uts --ipc --net --pid sh -c 'systemctl is-active containerd || systemctl is-active snap.containerd.containerd || true'
+        grep -n 'config_path = "/etc/containerd/certs.d"' /host/etc/containerd/config.toml || true
+        sleep 3600
+      image: alpine:3.20
+      imagePullPolicy: IfNotPresent
+      name: configure
+      resources: {}
+      securityContext:
+        privileged: true
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /host/etc/containerd
+        name: host-etc-containerd
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-vc75k
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    hostNetwork: true
+    hostPID: true
+    nodeName: k8s
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - operator: Exists
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/disk-pressure
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/memory-pressure
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/pid-pressure
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/unschedulable
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/network-unavailable
+      operator: Exists
+    volumes:
+    - hostPath:
+        path: /etc/containerd
+        type: DirectoryOrCreate
+      name: host-etc-containerd
+    - name: kube-api-access-vc75k
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:34:00Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-15T13:40:07Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:34:00Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:34:00Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-15T13:40:07Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://af49fcfc2b18c12490fff179394710cae868f9c5a456a8307652f84587868a5b
+      image: docker.io/library/alpine:3.20
+      imageID: docker.io/library/alpine@sha256:a4f4213abb84c497377b8544c81b3564f313746700372ec4fe84653e4fb03805
+      lastState:
+        terminated:
+          containerID: containerd://1ad91bcff55a7a03587753b1137f69ca183be03dd9b6366d062b763e6d79b8e7
+          exitCode: 255
+          finishedAt: "2026-04-21T13:33:33Z"
+          reason: Unknown
+          startedAt: "2026-04-20T20:19:15Z"
+      name: configure
+      ready: true
+      restartCount: 81
+      started: true
+      state:
+        running:
+          startedAt: "2026-04-21T13:34:00Z"
+    hostIP: 192.168.1.10
+    hostIPs:
+    - ip: 192.168.1.10
+    phase: Running
+    podIP: 192.168.1.10
+    podIPs:
+    - ip: 192.168.1.10
+    qosClass: BestEffort
+    startTime: "2026-04-15T13:40:07Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-04-15T13:40:11Z"
+    generateName: configure-local-registry-
+    labels:
+      app: configure-local-registry
+      controller-revision-hash: 75c6c6d984
+      pod-template-generation: "2"
+    name: configure-local-registry-wr58v
+    namespace: node-maintenance
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DaemonSet
+      name: configure-local-registry
+      uid: 23d3e98a-4a72-4ca6-9979-3781e7bce00c
+    resourceVersion: "1442484"
+    uid: b16e626c-af0e-4116-81c3-7784362a3f5a
+  spec:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchFields:
+            - key: metadata.name
+              operator: In
+              values:
+              - k8s-master
+    containers:
+    - command:
+      - /bin/sh
+      - -c
+      - |
+        set -eu
+        apk add --no-cache util-linux
+        if [ -f /host/etc/containerd/config.toml ]; then
+          sed -i '/\[plugins\."io.containerd.grpc.v1.cri"\.registry\]/,/^\[/ s#config_path = ""#config_path = "/etc/containerd/certs.d"#' /host/etc/containerd/config.toml
+          sed -i '/\[plugins\."io.containerd.cri.v1.images"\.registry\]/,/^\[/ s#config_path = ""#config_path = "/etc/containerd/certs.d"#' /host/etc/containerd/config.toml
+        fi
+        mkdir -p /host/etc/containerd/certs.d/192.168.1.10:30500
+        cat > /host/etc/containerd/certs.d/192.168.1.10:30500/hosts.toml <<'EOF'
+        server = "http://192.168.1.10:30500"
+
+        [host."http://192.168.1.10:30500"]
+          capabilities = ["pull", "resolve", "push"]
+          skip_verify = true
+        EOF
+        nsenter --target 1 --mount --uts --ipc --net --pid sh -c 'systemctl restart containerd || systemctl restart snap.containerd.containerd || true'
+        sleep 5
+        nsenter --target 1 --mount --uts --ipc --net --pid sh -c 'systemctl is-active containerd || systemctl is-active snap.containerd.containerd || true'
+        grep -n 'config_path = "/etc/containerd/certs.d"' /host/etc/containerd/config.toml || true
+        sleep 3600
+      image: alpine:3.20
+      imagePullPolicy: IfNotPresent
+      name: configure
+      resources: {}
+      securityContext:
+        privileged: true
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /host/etc/containerd
+        name: host-etc-containerd
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-2s885
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    hostNetwork: true
+    hostPID: true
+    nodeName: k8s-master
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - operator: Exists
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/disk-pressure
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/memory-pressure
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/pid-pressure
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/unschedulable
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/network-unavailable
+      operator: Exists
+    volumes:
+    - hostPath:
+        path: /etc/containerd
+        type: DirectoryOrCreate
+      name: host-etc-containerd
+    - name: kube-api-access-2s885
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:33:25Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-15T13:40:11Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:33:25Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:33:25Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-15T13:40:11Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://d3c5bf5bf844e459e31d3d6efef0c08d0b333cf6446138b62c170fa1daf36c03
+      image: docker.io/library/alpine:3.20
+      imageID: docker.io/library/alpine@sha256:a4f4213abb84c497377b8544c81b3564f313746700372ec4fe84653e4fb03805
+      lastState:
+        terminated:
+          containerID: containerd://b3c5484e399f0ac1e70648edcc0354038a9802c7e7087eff734f5922fc0f18f7
+          exitCode: 255
+          finishedAt: "2026-04-21T13:33:13Z"
+          reason: Unknown
+          startedAt: "2026-04-20T20:18:31Z"
+      name: configure
+      ready: true
+      restartCount: 81
+      started: true
+      state:
+        running:
+          startedAt: "2026-04-21T13:33:25Z"
+    hostIP: 192.168.1.13
+    hostIPs:
+    - ip: 192.168.1.13
+    phase: Running
+    podIP: 192.168.1.13
+    podIPs:
+    - ip: 192.168.1.13
+    qosClass: BestEffort
+    startTime: "2026-04-15T13:40:11Z"
+- apiVersion: apps/v1
+  kind: DaemonSet
+  metadata:
+    annotations:
+      deprecated.daemonset.template.generation: "2"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"DaemonSet","metadata":{"annotations":{},"name":"configure-local-registry","namespace":"node-maintenance"},"spec":{"selector":{"matchLabels":{"app":"configure-local-registry"}},"template":{"metadata":{"labels":{"app":"configure-local-registry"}},"spec":{"containers":[{"command":["/bin/sh","-c","set -eu\napk add --no-cache util-linux\nif [ -f /host/etc/containerd/config.toml ]; then\n  sed -i '/\\[plugins\\.\"io.containerd.grpc.v1.cri\"\\.registry\\]/,/^\\[/ s#config_path = \"\"#config_path = \"/etc/containerd/certs.d\"#' /host/etc/containerd/config.toml\n  sed -i '/\\[plugins\\.\"io.containerd.cri.v1.images\"\\.registry\\]/,/^\\[/ s#config_path = \"\"#config_path = \"/etc/containerd/certs.d\"#' /host/etc/containerd/config.toml\nfi\nmkdir -p /host/etc/containerd/certs.d/192.168.1.10:30500\ncat \u003e /host/etc/containerd/certs.d/192.168.1.10:30500/hosts.toml \u003c\u003c'EOF'\nserver = \"http://192.168.1.10:30500\"\n\n[host.\"http://192.168.1.10:30500\"]\n  capabilities = [\"pull\", \"resolve\", \"push\"]\n  skip_verify = true\nEOF\nnsenter --target 1 --mount --uts --ipc --net --pid sh -c 'systemctl restart containerd || systemctl restart snap.containerd.containerd || true'\nsleep 5\nnsenter --target 1 --mount --uts --ipc --net --pid sh -c 'systemctl is-active containerd || systemctl is-active snap.containerd.containerd || true'\ngrep -n 'config_path = \"/etc/containerd/certs.d\"' /host/etc/containerd/config.toml || true\nsleep 3600\n"],"image":"alpine:3.20","name":"configure","securityContext":{"privileged":true},"volumeMounts":[{"mountPath":"/host/etc/containerd","name":"host-etc-containerd"}]}],"hostNetwork":true,"hostPID":true,"tolerations":[{"operator":"Exists"}],"volumes":[{"hostPath":{"path":"/etc/containerd","type":"DirectoryOrCreate"},"name":"host-etc-containerd"}]}}}}
+    creationTimestamp: "2026-04-15T13:36:42Z"
+    generation: 2
+    name: configure-local-registry
+    namespace: node-maintenance
+    resourceVersion: "1444263"
+    uid: 23d3e98a-4a72-4ca6-9979-3781e7bce00c
+  spec:
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: configure-local-registry
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: configure-local-registry
+      spec:
+        containers:
+        - command:
+          - /bin/sh
+          - -c
+          - |
+            set -eu
+            apk add --no-cache util-linux
+            if [ -f /host/etc/containerd/config.toml ]; then
+              sed -i '/\[plugins\."io.containerd.grpc.v1.cri"\.registry\]/,/^\[/ s#config_path = ""#config_path = "/etc/containerd/certs.d"#' /host/etc/containerd/config.toml
+              sed -i '/\[plugins\."io.containerd.cri.v1.images"\.registry\]/,/^\[/ s#config_path = ""#config_path = "/etc/containerd/certs.d"#' /host/etc/containerd/config.toml
+            fi
+            mkdir -p /host/etc/containerd/certs.d/192.168.1.10:30500
+            cat > /host/etc/containerd/certs.d/192.168.1.10:30500/hosts.toml <<'EOF'
+            server = "http://192.168.1.10:30500"
+
+            [host."http://192.168.1.10:30500"]
+              capabilities = ["pull", "resolve", "push"]
+              skip_verify = true
+            EOF
+            nsenter --target 1 --mount --uts --ipc --net --pid sh -c 'systemctl restart containerd || systemctl restart snap.containerd.containerd || true'
+            sleep 5
+            nsenter --target 1 --mount --uts --ipc --net --pid sh -c 'systemctl is-active containerd || systemctl is-active snap.containerd.containerd || true'
+            grep -n 'config_path = "/etc/containerd/certs.d"' /host/etc/containerd/config.toml || true
+            sleep 3600
+          image: alpine:3.20
+          imagePullPolicy: IfNotPresent
+          name: configure
+          resources: {}
+          securityContext:
+            privileged: true
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /host/etc/containerd
+            name: host-etc-containerd
+        dnsPolicy: ClusterFirst
+        hostNetwork: true
+        hostPID: true
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        tolerations:
+        - operator: Exists
+        volumes:
+        - hostPath:
+            path: /etc/containerd
+            type: DirectoryOrCreate
+          name: host-etc-containerd
+    updateStrategy:
+      rollingUpdate:
+        maxSurge: 0
+        maxUnavailable: 1
+      type: RollingUpdate
+  status:
+    currentNumberScheduled: 4
+    desiredNumberScheduled: 4
+    numberAvailable: 4
+    numberMisscheduled: 0
+    numberReady: 4
+    observedGeneration: 2
+    updatedNumberScheduled: 4
+kind: List
+metadata:
+  resourceVersion: ""

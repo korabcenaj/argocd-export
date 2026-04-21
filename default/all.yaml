@@ -1,0 +1,2048 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/restartedAt: "2026-04-18T13:08:16Z"
+    creationTimestamp: "2026-04-18T20:51:07Z"
+    generateName: cluster-browser-6fb9468789-
+    labels:
+      app: browser
+      pod-template-hash: 6fb9468789
+    name: cluster-browser-6fb9468789-dgllh
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: cluster-browser-6fb9468789
+      uid: 0ac25637-d46e-4b09-8dc2-493b021dd41c
+    resourceVersion: "1443725"
+    uid: bee31446-9222-44a7-b19f-ea9981094ec5
+  spec:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: node-role.kubernetes.io/control-plane
+              operator: DoesNotExist
+    containers:
+    - image: nginx:alpine
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /
+          port: 80
+          scheme: HTTP
+        initialDelaySeconds: 5
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      name: nginx
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /
+          port: 80
+          scheme: HTTP
+        initialDelaySeconds: 2
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources:
+        limits:
+          cpu: 200m
+          memory: 128Mi
+        requests:
+          cpu: 100m
+          memory: 64Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-7bzx9
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: k8s
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-7bzx9
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:34:18Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-19T09:33:21Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:34:19Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:34:19Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-19T09:33:21Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://6da62c0e8df9b4dc6d9be819ddeeb7f31345ef763a1a7fff3aaa445691923cde
+      image: docker.io/library/nginx:alpine
+      imageID: docker.io/library/nginx@sha256:e7257f1ef28ba17cf7c248cb8ccf6f0c6e0228ab9c315c152f9c203cd34cf6d1
+      lastState:
+        terminated:
+          containerID: containerd://a545c024248cde5537bb4e4c9c04858ffa26d34a5e96704a445dc1962217f9dc
+          exitCode: 255
+          finishedAt: "2026-04-21T13:33:33Z"
+          reason: Unknown
+          startedAt: "2026-04-20T12:18:09Z"
+      name: nginx
+      ready: true
+      restartCount: 2
+      started: true
+      state:
+        running:
+          startedAt: "2026-04-21T13:34:17Z"
+    hostIP: 192.168.1.10
+    hostIPs:
+    - ip: 192.168.1.10
+    phase: Running
+    podIP: 10.244.1.180
+    podIPs:
+    - ip: 10.244.1.180
+    qosClass: Burstable
+    startTime: "2026-04-19T09:33:21Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/restartedAt: "2026-04-18T13:08:16Z"
+    creationTimestamp: "2026-04-18T20:51:08Z"
+    generateName: cluster-browser-6fb9468789-
+    labels:
+      app: browser
+      pod-template-hash: 6fb9468789
+    name: cluster-browser-6fb9468789-kptjb
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: cluster-browser-6fb9468789
+      uid: 0ac25637-d46e-4b09-8dc2-493b021dd41c
+    resourceVersion: "1443688"
+    uid: 773dee6f-bd41-44df-b390-f77ddfef4c65
+  spec:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: node-role.kubernetes.io/control-plane
+              operator: DoesNotExist
+    containers:
+    - image: nginx:alpine
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /
+          port: 80
+          scheme: HTTP
+        initialDelaySeconds: 5
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      name: nginx
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /
+          port: 80
+          scheme: HTTP
+        initialDelaySeconds: 2
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources:
+        limits:
+          cpu: 200m
+          memory: 128Mi
+        requests:
+          cpu: 100m
+          memory: 64Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-ndbqj
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: k8s
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-ndbqj
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:34:16Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-19T09:33:21Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:34:18Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:34:18Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-19T09:33:21Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://9f2723825892eb04d1067beb1a595c94c6df9c98ce3cfaf95cf43a557cc93e0a
+      image: docker.io/library/nginx:alpine
+      imageID: docker.io/library/nginx@sha256:e7257f1ef28ba17cf7c248cb8ccf6f0c6e0228ab9c315c152f9c203cd34cf6d1
+      lastState:
+        terminated:
+          containerID: containerd://445c66b61cf1eb62e04122e6a5e757919974f5ec1ded6f214cf4c270c18dc72e
+          exitCode: 255
+          finishedAt: "2026-04-21T13:33:33Z"
+          reason: Unknown
+          startedAt: "2026-04-20T12:18:04Z"
+      name: nginx
+      ready: true
+      restartCount: 2
+      started: true
+      state:
+        running:
+          startedAt: "2026-04-21T13:34:15Z"
+    hostIP: 192.168.1.10
+    hostIPs:
+    - ip: 192.168.1.10
+    phase: Running
+    podIP: 10.244.1.175
+    podIPs:
+    - ip: 10.244.1.175
+    qosClass: Burstable
+    startTime: "2026-04-19T09:33:21Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-04-19T14:26:04Z"
+    generateName: immich-machine-learning-74fddd9fb5-
+    labels:
+      app.kubernetes.io/controller: main
+      app.kubernetes.io/instance: immich
+      app.kubernetes.io/name: machine-learning
+      pod-template-hash: 74fddd9fb5
+    name: immich-machine-learning-74fddd9fb5-vc8wr
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: immich-machine-learning-74fddd9fb5
+      uid: d31c23eb-7ddb-4924-bc01-b974e4b0a8a4
+    resourceVersion: "1443005"
+    uid: 60d6b5f9-ce5b-4695-a202-663b6f19bf23
+  spec:
+    automountServiceAccountToken: true
+    containers:
+    - env:
+      - name: HF_XET_CACHE
+        value: /cache/huggingface-xet
+      - name: IMMICH_MACHINE_LEARNING_URL
+        value: http://immich-machine-learning:3003
+      - name: MPLCONFIGDIR
+        value: /cache/matplotlib-config
+      - name: REDIS_HOSTNAME
+        value: immich-valkey
+      - name: TRANSFORMERS_CACHE
+        value: /cache
+      image: ghcr.io/immich-app/immich-machine-learning:v2.6.3
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /ping
+          port: http
+          scheme: HTTP
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      name: main
+      ports:
+      - containerPort: 3003
+        name: http
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /ping
+          port: http
+          scheme: HTTP
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources: {}
+      startupProbe:
+        failureThreshold: 60
+        httpGet:
+          path: /ping
+          port: http
+          scheme: HTTP
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /cache
+        name: cache
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-7cbcg
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: false
+    nodeName: k8s2
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - emptyDir: {}
+      name: cache
+    - name: kube-api-access-7cbcg
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:33:36Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-19T14:26:04Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:33:44Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:33:44Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-19T14:26:04Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://e762a7177c74712b6c2bdcf8f725a79766c825fd80b1b4b5918f909323873f4a
+      image: ghcr.io/immich-app/immich-machine-learning:v2.6.3
+      imageID: ghcr.io/immich-app/immich-machine-learning@sha256:33b17015c3d14f2565e9b8cd36b48a70027b14b5cd20da7fbfff21a370b0309c
+      lastState:
+        terminated:
+          containerID: containerd://60c1372bf2757ab3c8707aa41c53e934b4596e584f62c573a891b6d0daf6320d
+          exitCode: 255
+          finishedAt: "2026-04-21T13:33:12Z"
+          reason: Unknown
+          startedAt: "2026-04-20T12:27:32Z"
+      name: main
+      ready: true
+      restartCount: 3
+      started: true
+      state:
+        running:
+          startedAt: "2026-04-21T13:33:35Z"
+    hostIP: 192.168.1.29
+    hostIPs:
+    - ip: 192.168.1.29
+    phase: Running
+    podIP: 10.244.2.64
+    podIPs:
+    - ip: 10.244.2.64
+    qosClass: BestEffort
+    startTime: "2026-04-19T14:26:04Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-04-19T13:30:51Z"
+    generateName: immich-ml-worker-58cdc9799f-
+    labels:
+      app: immich-ml-worker
+      pod-template-hash: 58cdc9799f
+    name: immich-ml-worker-58cdc9799f-pvqfq
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: immich-ml-worker-58cdc9799f
+      uid: f64fa58e-1097-468e-8068-66838c2456ac
+    resourceVersion: "1442982"
+    uid: 7e355825-d37c-4271-a0d6-ed500b00316f
+  spec:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+              - k8s-master
+    containers:
+    - env:
+      - name: MACHINE_LEARNING_CLIP_MODEL
+        value: ViT-L-14__openai
+      - name: MACHINE_LEARNING_FACIAL_RECOGNITION_MODEL
+        value: buffalo_l
+      - name: MACHINE_LEARNING_ENABLED
+        value: "true"
+      image: ghcr.io/immich-app/immich-machine-learning:release
+      imagePullPolicy: Always
+      name: ml-worker
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-d9r59
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: k8s-master
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-d9r59
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:33:41Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-19T13:30:51Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:33:41Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:33:41Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-19T13:30:51Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://fb055671f4a9ac95fb5454948ab237c6c2e17348cc452a2fd8e3231e67cb9951
+      image: ghcr.io/immich-app/immich-machine-learning:release
+      imageID: ghcr.io/immich-app/immich-machine-learning@sha256:a2501141440f10516d329fdfba2c68082e19eb9ba6016c061ac80d23beadf7f3
+      lastState:
+        terminated:
+          containerID: containerd://6a49d43021afc8dfc4747c20a449fa4dbf355e5ae076fe4d91fb1b5aa70f620b
+          exitCode: 255
+          finishedAt: "2026-04-21T13:33:13Z"
+          reason: Unknown
+          startedAt: "2026-04-20T12:17:36Z"
+      name: ml-worker
+      ready: true
+      restartCount: 2
+      started: true
+      state:
+        running:
+          startedAt: "2026-04-21T13:33:41Z"
+    hostIP: 192.168.1.13
+    hostIPs:
+    - ip: 192.168.1.13
+    phase: Running
+    podIP: 10.244.0.90
+    podIPs:
+    - ip: 10.244.0.90
+    qosClass: BestEffort
+    startTime: "2026-04-19T13:30:51Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-04-19T14:26:04Z"
+    generateName: immich-server-779557799c-
+    labels:
+      app.kubernetes.io/controller: main
+      app.kubernetes.io/instance: immich
+      app.kubernetes.io/name: server
+      pod-template-hash: 779557799c
+    name: immich-server-779557799c-wq2cl
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: immich-server-779557799c
+      uid: 80079103-e789-4abb-90fd-b1b012ff11bb
+    resourceVersion: "1456757"
+    uid: fea380b6-f602-4c9e-9ac8-0571f2db59fc
+  spec:
+    automountServiceAccountToken: true
+    containers:
+    - env:
+      - name: IMMICH_MACHINE_LEARNING_URL
+        value: http://immich-machine-learning:3003
+      - name: REDIS_HOSTNAME
+        value: immich-valkey
+      image: ghcr.io/immich-app/immich-server:v2.6.3
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /api/server/ping
+          port: http
+          scheme: HTTP
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      name: main
+      ports:
+      - containerPort: 2283
+        name: http
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /api/server/ping
+          port: http
+          scheme: HTTP
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources: {}
+      startupProbe:
+        failureThreshold: 30
+        httpGet:
+          path: /api/server/ping
+          port: http
+          scheme: HTTP
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /data
+        name: data
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-jp2fh
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: false
+    nodeName: k8s2
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: immich-library
+    - name: kube-api-access-jp2fh
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:33:46Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-19T14:28:32Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-19T14:28:32Z"
+      message: 'containers with unready status: [main]'
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-19T14:28:32Z"
+      message: 'containers with unready status: [main]'
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-19T14:28:32Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://0426b36265083bb864aa2c2d1283458e95ea909d9ec491b79b06efc5b8e20b71
+      image: ghcr.io/immich-app/immich-server:v2.6.3
+      imageID: ghcr.io/immich-app/immich-server@sha256:0cc1f82953d9598eb9e9dd11cbde1f50fe54f9c46c4506b089e8ad7bfc9d1f0c
+      lastState:
+        terminated:
+          containerID: containerd://0426b36265083bb864aa2c2d1283458e95ea909d9ec491b79b06efc5b8e20b71
+          exitCode: 1
+          finishedAt: "2026-04-21T14:26:28Z"
+          reason: Error
+          startedAt: "2026-04-21T14:26:26Z"
+      name: main
+      ready: false
+      restartCount: 179
+      started: false
+      state:
+        waiting:
+          message: back-off 5m0s restarting failed container=main pod=immich-server-779557799c-wq2cl_default(fea380b6-f602-4c9e-9ac8-0571f2db59fc)
+          reason: CrashLoopBackOff
+    hostIP: 192.168.1.29
+    hostIPs:
+    - ip: 192.168.1.29
+    phase: Running
+    podIP: 10.244.2.72
+    podIPs:
+    - ip: 10.244.2.72
+    qosClass: BestEffort
+    startTime: "2026-04-19T14:28:32Z"
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"browser-service","namespace":"default"},"spec":{"ports":[{"nodePort":30090,"port":80,"targetPort":80}],"selector":{"app":"browser"},"type":"NodePort"}}
+    creationTimestamp: "2026-04-05T14:02:12Z"
+    name: browser-service
+    namespace: default
+    resourceVersion: "12762"
+    uid: b4716ff5-3684-4acf-8ed5-dba33e64599e
+  spec:
+    clusterIP: 10.109.79.248
+    clusterIPs:
+    - 10.109.79.248
+    externalTrafficPolicy: Cluster
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - nodePort: 30090
+      port: 80
+      protocol: TCP
+      targetPort: 80
+    selector:
+      app: browser
+    sessionAffinity: None
+    type: NodePort
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: immich
+      meta.helm.sh/release-namespace: default
+    creationTimestamp: "2026-04-19T14:26:04Z"
+    labels:
+      app.kubernetes.io/instance: immich
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: machine-learning
+      app.kubernetes.io/service: immich-machine-learning
+      app.kubernetes.io/version: v2.6.3
+      helm.sh/chart: immich-0.11.1
+    name: immich-machine-learning
+    namespace: default
+    resourceVersion: "1248988"
+    uid: 80130661-00a0-49cc-890e-7a39124944a6
+  spec:
+    clusterIP: 10.100.182.111
+    clusterIPs:
+    - 10.100.182.111
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      port: 3003
+      protocol: TCP
+      targetPort: http
+    selector:
+      app.kubernetes.io/controller: main
+      app.kubernetes.io/instance: immich
+      app.kubernetes.io/name: machine-learning
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"immich-ml-worker","namespace":"default"},"spec":{"ports":[{"port":3003,"protocol":"TCP","targetPort":3003}],"selector":{"app":"immich-ml-worker"}}}
+    creationTimestamp: "2026-04-19T13:33:53Z"
+    name: immich-ml-worker
+    namespace: default
+    resourceVersion: "1236663"
+    uid: e0bc6527-afb8-4b53-97d8-ed65e385156e
+  spec:
+    clusterIP: 10.105.204.167
+    clusterIPs:
+    - 10.105.204.167
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 3003
+      protocol: TCP
+      targetPort: 3003
+    selector:
+      app: immich-ml-worker
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: immich
+      meta.helm.sh/release-namespace: default
+    creationTimestamp: "2026-04-19T14:26:04Z"
+    labels:
+      app.kubernetes.io/instance: immich
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: server
+      app.kubernetes.io/service: immich-server
+      app.kubernetes.io/version: v2.6.3
+      helm.sh/chart: immich-0.11.1
+    name: immich-server
+    namespace: default
+    resourceVersion: "1248990"
+    uid: 2614b2cb-bcdb-4bf2-b188-c0d0921ed96d
+  spec:
+    clusterIP: 10.102.99.69
+    clusterIPs:
+    - 10.102.99.69
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - appProtocol: kubernetes.io/ws
+      name: http
+      port: 2283
+      protocol: TCP
+      targetPort: http
+    selector:
+      app.kubernetes.io/controller: main
+      app.kubernetes.io/instance: immich
+      app.kubernetes.io/name: server
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: "2026-04-05T11:51:09Z"
+    labels:
+      component: apiserver
+      provider: kubernetes
+    name: kubernetes
+    namespace: default
+    resourceVersion: "195"
+    uid: c6670c87-2b5c-4067-8d7f-418c57391ab2
+  spec:
+    clusterIP: 10.96.0.1
+    clusterIPs:
+    - 10.96.0.1
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: https
+      port: 443
+      protocol: TCP
+      targetPort: 6443
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "4"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"cluster-browser","namespace":"default"},"spec":{"replicas":2,"selector":{"matchLabels":{"app":"browser"}},"template":{"metadata":{"labels":{"app":"browser"}},"spec":{"affinity":{"nodeAffinity":{"requiredDuringSchedulingIgnoredDuringExecution":{"nodeSelectorTerms":[{"matchExpressions":[{"key":"node-role.kubernetes.io/control-plane","operator":"DoesNotExist"}]}]}}},"containers":[{"image":"nginx:alpine","livenessProbe":{"httpGet":{"path":"/","port":80},"initialDelaySeconds":5,"periodSeconds":10},"name":"nginx","readinessProbe":{"httpGet":{"path":"/","port":80},"initialDelaySeconds":2,"periodSeconds":5},"resources":{"limits":{"cpu":"200m","memory":"128Mi"},"requests":{"cpu":"100m","memory":"64Mi"}}}]}}}}
+    creationTimestamp: "2026-04-05T14:02:12Z"
+    generation: 4
+    name: cluster-browser
+    namespace: default
+    resourceVersion: "1443729"
+    uid: 2de2a398-ba68-4e9e-90eb-f2080b7dabf4
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 2
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: browser
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2026-04-18T13:08:16Z"
+        creationTimestamp: null
+        labels:
+          app: browser
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: node-role.kubernetes.io/control-plane
+                  operator: DoesNotExist
+        containers:
+        - image: nginx:alpine
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: nginx
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 2
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 200m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 64Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 2
+    conditions:
+    - lastTransitionTime: "2026-04-05T14:02:12Z"
+      lastUpdateTime: "2026-04-18T13:08:40Z"
+      message: ReplicaSet "cluster-browser-6fb9468789" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-04-21T13:34:19Z"
+      lastUpdateTime: "2026-04-21T13:34:19Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 4
+    readyReplicas: 2
+    replicas: 2
+    updatedReplicas: 2
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      meta.helm.sh/release-name: immich
+      meta.helm.sh/release-namespace: default
+    creationTimestamp: "2026-04-19T14:26:04Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/controller: main
+      app.kubernetes.io/instance: immich
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: machine-learning
+      app.kubernetes.io/version: v2.6.3
+      helm.sh/chart: immich-0.11.1
+    name: immich-machine-learning
+    namespace: default
+    resourceVersion: "1326806"
+    uid: cf0f1124-2118-4dc2-8ac4-73a826c954e1
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 3
+    selector:
+      matchLabels:
+        app.kubernetes.io/controller: main
+        app.kubernetes.io/instance: immich
+        app.kubernetes.io/name: machine-learning
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app.kubernetes.io/controller: main
+          app.kubernetes.io/instance: immich
+          app.kubernetes.io/name: machine-learning
+      spec:
+        automountServiceAccountToken: true
+        containers:
+        - env:
+          - name: HF_XET_CACHE
+            value: /cache/huggingface-xet
+          - name: IMMICH_MACHINE_LEARNING_URL
+            value: http://immich-machine-learning:3003
+          - name: MPLCONFIGDIR
+            value: /cache/matplotlib-config
+          - name: REDIS_HOSTNAME
+            value: immich-valkey
+          - name: TRANSFORMERS_CACHE
+            value: /cache
+          image: ghcr.io/immich-app/immich-machine-learning:v2.6.3
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /ping
+              port: http
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: main
+          ports:
+          - containerPort: 3003
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /ping
+              port: http
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources: {}
+          startupProbe:
+            failureThreshold: 60
+            httpGet:
+              path: /ping
+              port: http
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /cache
+            name: cache
+        dnsPolicy: ClusterFirst
+        enableServiceLinks: false
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: default
+        serviceAccountName: default
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - emptyDir: {}
+          name: cache
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-04-19T14:26:04Z"
+      lastUpdateTime: "2026-04-19T14:26:44Z"
+      message: ReplicaSet "immich-machine-learning-74fddd9fb5" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-04-20T12:27:41Z"
+      lastUpdateTime: "2026-04-20T12:27:41Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "2"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"immich-ml-worker","namespace":"default"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"immich-ml-worker"}},"template":{"metadata":{"labels":{"app":"immich-ml-worker"}},"spec":{"affinity":{"nodeAffinity":{"requiredDuringSchedulingIgnoredDuringExecution":{"nodeSelectorTerms":[{"matchExpressions":[{"key":"kubernetes.io/hostname","operator":"In","values":["k8s-master"]}]}]}}},"containers":[{"env":[{"name":"MACHINE_LEARNING_CLIP_MODEL","value":"ViT-L-14__openai"},{"name":"MACHINE_LEARNING_FACIAL_RECOGNITION_MODEL","value":"buffalo_l"},{"name":"MACHINE_LEARNING_ENABLED","value":"true"}],"image":"ghcr.io/immich-app/immich-machine-learning:release","name":"ml-worker"}]}}}}
+    creationTimestamp: "2026-04-19T12:50:06Z"
+    generation: 2
+    name: immich-ml-worker
+    namespace: default
+    resourceVersion: "1236035"
+    uid: 9a3f2cde-1585-45eb-8179-afe643610bcf
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: immich-ml-worker
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: immich-ml-worker
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                  - k8s-master
+        containers:
+        - env:
+          - name: MACHINE_LEARNING_CLIP_MODEL
+            value: ViT-L-14__openai
+          - name: MACHINE_LEARNING_FACIAL_RECOGNITION_MODEL
+            value: buffalo_l
+          - name: MACHINE_LEARNING_ENABLED
+            value: "true"
+          image: ghcr.io/immich-app/immich-machine-learning:release
+          imagePullPolicy: Always
+          name: ml-worker
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-04-19T13:31:16Z"
+      lastUpdateTime: "2026-04-19T13:31:16Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2026-04-19T13:30:51Z"
+      lastUpdateTime: "2026-04-19T13:31:16Z"
+      message: ReplicaSet "immich-ml-worker-58cdc9799f" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      meta.helm.sh/release-name: immich
+      meta.helm.sh/release-namespace: default
+    creationTimestamp: "2026-04-19T14:26:04Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/controller: main
+      app.kubernetes.io/instance: immich
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: server
+      app.kubernetes.io/version: v2.6.3
+      helm.sh/chart: immich-0.11.1
+    name: immich-server
+    namespace: default
+    resourceVersion: "1251505"
+    uid: dd3f3e57-171b-42d9-abbf-664be1d204b6
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 3
+    selector:
+      matchLabels:
+        app.kubernetes.io/controller: main
+        app.kubernetes.io/instance: immich
+        app.kubernetes.io/name: server
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app.kubernetes.io/controller: main
+          app.kubernetes.io/instance: immich
+          app.kubernetes.io/name: server
+      spec:
+        automountServiceAccountToken: true
+        containers:
+        - env:
+          - name: IMMICH_MACHINE_LEARNING_URL
+            value: http://immich-machine-learning:3003
+          - name: REDIS_HOSTNAME
+            value: immich-valkey
+          image: ghcr.io/immich-app/immich-server:v2.6.3
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /api/server/ping
+              port: http
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: main
+          ports:
+          - containerPort: 2283
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /api/server/ping
+              port: http
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources: {}
+          startupProbe:
+            failureThreshold: 30
+            httpGet:
+              path: /api/server/ping
+              port: http
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /data
+            name: data
+        dnsPolicy: ClusterFirst
+        enableServiceLinks: false
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: default
+        serviceAccountName: default
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: immich-library
+  status:
+    conditions:
+    - lastTransitionTime: "2026-04-19T14:26:04Z"
+      lastUpdateTime: "2026-04-19T14:26:04Z"
+      message: Deployment does not have minimum availability.
+      reason: MinimumReplicasUnavailable
+      status: "False"
+      type: Available
+    - lastTransitionTime: "2026-04-19T14:36:05Z"
+      lastUpdateTime: "2026-04-19T14:36:05Z"
+      message: ReplicaSet "immich-server-779557799c" has timed out progressing.
+      reason: ProgressDeadlineExceeded
+      status: "False"
+      type: Progressing
+    observedGeneration: 1
+    replicas: 1
+    unavailableReplicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "2"
+      deployment.kubernetes.io/max-replicas: "3"
+      deployment.kubernetes.io/revision: "3"
+    creationTimestamp: "2026-04-05T14:11:41Z"
+    generation: 4
+    labels:
+      app: browser
+      pod-template-hash: 5466fc684
+    name: cluster-browser-5466fc684
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: cluster-browser
+      uid: 2de2a398-ba68-4e9e-90eb-f2080b7dabf4
+    resourceVersion: "1112152"
+    uid: 0b42b562-b7fa-4fc2-b9b2-c9f408025ec3
+  spec:
+    replicas: 0
+    selector:
+      matchLabels:
+        app: browser
+        pod-template-hash: 5466fc684
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2026-04-05T14:11:41Z"
+        creationTimestamp: null
+        labels:
+          app: browser
+          pod-template-hash: 5466fc684
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: node-role.kubernetes.io/control-plane
+                  operator: DoesNotExist
+        containers:
+        - image: nginx:alpine
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: nginx
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 2
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 200m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 64Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    observedGeneration: 4
+    replicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "2"
+      deployment.kubernetes.io/max-replicas: "3"
+      deployment.kubernetes.io/revision: "2"
+    creationTimestamp: "2026-04-05T14:10:08Z"
+    generation: 4
+    labels:
+      app: browser
+      pod-template-hash: 6d76995fdb
+    name: cluster-browser-6d76995fdb
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: cluster-browser
+      uid: 2de2a398-ba68-4e9e-90eb-f2080b7dabf4
+    resourceVersion: "13803"
+    uid: 52f5603e-0954-4d08-b890-026c7ff9caf7
+  spec:
+    replicas: 0
+    selector:
+      matchLabels:
+        app: browser
+        pod-template-hash: 6d76995fdb
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: browser
+          pod-template-hash: 6d76995fdb
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: node-role.kubernetes.io/control-plane
+                  operator: DoesNotExist
+        containers:
+        - image: nginx:alpine
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: nginx
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 2
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 200m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 64Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    observedGeneration: 4
+    replicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "2"
+      deployment.kubernetes.io/max-replicas: "3"
+      deployment.kubernetes.io/revision: "4"
+    creationTimestamp: "2026-04-18T13:08:16Z"
+    generation: 2
+    labels:
+      app: browser
+      pod-template-hash: 6fb9468789
+    name: cluster-browser-6fb9468789
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: cluster-browser
+      uid: 2de2a398-ba68-4e9e-90eb-f2080b7dabf4
+    resourceVersion: "1443727"
+    uid: 0ac25637-d46e-4b09-8dc2-493b021dd41c
+  spec:
+    replicas: 2
+    selector:
+      matchLabels:
+        app: browser
+        pod-template-hash: 6fb9468789
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2026-04-18T13:08:16Z"
+        creationTimestamp: null
+        labels:
+          app: browser
+          pod-template-hash: 6fb9468789
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: node-role.kubernetes.io/control-plane
+                  operator: DoesNotExist
+        containers:
+        - image: nginx:alpine
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: nginx
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 2
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 200m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 64Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 2
+    fullyLabeledReplicas: 2
+    observedGeneration: 2
+    readyReplicas: 2
+    replicas: 2
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "2"
+      deployment.kubernetes.io/max-replicas: "3"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-04-05T14:02:12Z"
+    generation: 3
+    labels:
+      app: browser
+      pod-template-hash: d45679fc7
+    name: cluster-browser-d45679fc7
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: cluster-browser
+      uid: 2de2a398-ba68-4e9e-90eb-f2080b7dabf4
+    resourceVersion: "13598"
+    uid: b1f75280-01a6-42b8-af6f-175b8cfc8ac8
+  spec:
+    replicas: 0
+    selector:
+      matchLabels:
+        app: browser
+        pod-template-hash: d45679fc7
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: browser
+          pod-template-hash: d45679fc7
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: node-role.kubernetes.io/control-plane
+                  operator: DoesNotExist
+        containers:
+        - image: nginx:alpine
+          imagePullPolicy: IfNotPresent
+          name: nginx
+          ports:
+          - containerPort: 80
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    observedGeneration: 3
+    replicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+      meta.helm.sh/release-name: immich
+      meta.helm.sh/release-namespace: default
+    creationTimestamp: "2026-04-19T14:26:04Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/controller: main
+      app.kubernetes.io/instance: immich
+      app.kubernetes.io/name: machine-learning
+      pod-template-hash: 74fddd9fb5
+    name: immich-machine-learning-74fddd9fb5
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: immich-machine-learning
+      uid: cf0f1124-2118-4dc2-8ac4-73a826c954e1
+    resourceVersion: "1326805"
+    uid: d31c23eb-7ddb-4924-bc01-b974e4b0a8a4
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app.kubernetes.io/controller: main
+        app.kubernetes.io/instance: immich
+        app.kubernetes.io/name: machine-learning
+        pod-template-hash: 74fddd9fb5
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app.kubernetes.io/controller: main
+          app.kubernetes.io/instance: immich
+          app.kubernetes.io/name: machine-learning
+          pod-template-hash: 74fddd9fb5
+      spec:
+        automountServiceAccountToken: true
+        containers:
+        - env:
+          - name: HF_XET_CACHE
+            value: /cache/huggingface-xet
+          - name: IMMICH_MACHINE_LEARNING_URL
+            value: http://immich-machine-learning:3003
+          - name: MPLCONFIGDIR
+            value: /cache/matplotlib-config
+          - name: REDIS_HOSTNAME
+            value: immich-valkey
+          - name: TRANSFORMERS_CACHE
+            value: /cache
+          image: ghcr.io/immich-app/immich-machine-learning:v2.6.3
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /ping
+              port: http
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: main
+          ports:
+          - containerPort: 3003
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /ping
+              port: http
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources: {}
+          startupProbe:
+            failureThreshold: 60
+            httpGet:
+              path: /ping
+              port: http
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /cache
+            name: cache
+        dnsPolicy: ClusterFirst
+        enableServiceLinks: false
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: default
+        serviceAccountName: default
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - emptyDir: {}
+          name: cache
+  status:
+    availableReplicas: 1
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-04-19T12:50:06Z"
+    generation: 2
+    labels:
+      app: immich-ml-worker
+      pod-template-hash: 548bf769ff
+    name: immich-ml-worker-548bf769ff
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: immich-ml-worker
+      uid: 9a3f2cde-1585-45eb-8179-afe643610bcf
+    resourceVersion: "1236034"
+    uid: 98c55e8a-460b-4a9a-9c0f-659cb52befc4
+  spec:
+    replicas: 0
+    selector:
+      matchLabels:
+        app: immich-ml-worker
+        pod-template-hash: 548bf769ff
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: immich-ml-worker
+          pod-template-hash: 548bf769ff
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                  - k8s-master
+        containers:
+        - env:
+          - name: MACHINE_LEARNING_CLIP_MODEL
+            value: ViT-L-14__openai
+          - name: MACHINE_LEARNING_FACIAL_RECOGNITION_MODEL
+            value: buffalo_l
+          - name: MACHINE_LEARNING_ENABLED
+            value: "true"
+          image: ghcr.io/immich-app/immich-machine-learning:latest
+          imagePullPolicy: Always
+          name: ml-worker
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    observedGeneration: 2
+    replicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "2"
+    creationTimestamp: "2026-04-19T13:30:51Z"
+    generation: 1
+    labels:
+      app: immich-ml-worker
+      pod-template-hash: 58cdc9799f
+    name: immich-ml-worker-58cdc9799f
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: immich-ml-worker
+      uid: 9a3f2cde-1585-45eb-8179-afe643610bcf
+    resourceVersion: "1236025"
+    uid: f64fa58e-1097-468e-8068-66838c2456ac
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: immich-ml-worker
+        pod-template-hash: 58cdc9799f
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: immich-ml-worker
+          pod-template-hash: 58cdc9799f
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                  - k8s-master
+        containers:
+        - env:
+          - name: MACHINE_LEARNING_CLIP_MODEL
+            value: ViT-L-14__openai
+          - name: MACHINE_LEARNING_FACIAL_RECOGNITION_MODEL
+            value: buffalo_l
+          - name: MACHINE_LEARNING_ENABLED
+            value: "true"
+          image: ghcr.io/immich-app/immich-machine-learning:release
+          imagePullPolicy: Always
+          name: ml-worker
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+      meta.helm.sh/release-name: immich
+      meta.helm.sh/release-namespace: default
+    creationTimestamp: "2026-04-19T14:26:04Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/controller: main
+      app.kubernetes.io/instance: immich
+      app.kubernetes.io/name: server
+      pod-template-hash: 779557799c
+    name: immich-server-779557799c
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: immich-server
+      uid: dd3f3e57-171b-42d9-abbf-664be1d204b6
+    resourceVersion: "1249015"
+    uid: 80079103-e789-4abb-90fd-b1b012ff11bb
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app.kubernetes.io/controller: main
+        app.kubernetes.io/instance: immich
+        app.kubernetes.io/name: server
+        pod-template-hash: 779557799c
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app.kubernetes.io/controller: main
+          app.kubernetes.io/instance: immich
+          app.kubernetes.io/name: server
+          pod-template-hash: 779557799c
+      spec:
+        automountServiceAccountToken: true
+        containers:
+        - env:
+          - name: IMMICH_MACHINE_LEARNING_URL
+            value: http://immich-machine-learning:3003
+          - name: REDIS_HOSTNAME
+            value: immich-valkey
+          image: ghcr.io/immich-app/immich-server:v2.6.3
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /api/server/ping
+              port: http
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: main
+          ports:
+          - containerPort: 2283
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /api/server/ping
+              port: http
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources: {}
+          startupProbe:
+            failureThreshold: 30
+            httpGet:
+              path: /api/server/ping
+              port: http
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /data
+            name: data
+        dnsPolicy: ClusterFirst
+        enableServiceLinks: false
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: default
+        serviceAccountName: default
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: immich-library
+  status:
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    replicas: 1
+kind: List
+metadata:
+  resourceVersion: ""

@@ -1,0 +1,1153 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/restartedAt: "2026-04-20T20:04:48+02:00"
+    creationTimestamp: "2026-04-20T19:41:39Z"
+    generateName: sabnzbd-7c9c9f68ff-
+    labels:
+      app: sabnzbd
+      pod-template-hash: 7c9c9f68ff
+    name: sabnzbd-7c9c9f68ff-xgm7q
+    namespace: sabnzbd
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: sabnzbd-7c9c9f68ff
+      uid: 6b142e8d-c849-4df7-9f59-38a75b81d7f0
+    resourceVersion: "1442981"
+    uid: d9ab381c-df49-4463-af4d-227de18c7996
+  spec:
+    containers:
+    - image: linuxserver/sabnzbd:latest
+      imagePullPolicy: Always
+      name: sabnzbd
+      ports:
+      - containerPort: 8080
+        protocol: TCP
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /config
+        name: config
+      - mountPath: /downloads
+        name: downloads
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-7rkl8
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    initContainers:
+    - args:
+      - |
+        CONFIG_FILE=/config/sabnzbd.ini
+        if [ -f "$CONFIG_FILE" ]; then
+          grep -q sabnzbd.local.lan "$CONFIG_FILE" || sed -i 's/^host_whitelist = /host_whitelist = sabnzbd.local.lan,/' "$CONFIG_FILE"
+        fi
+      command:
+      - /bin/sh
+      - -c
+      image: busybox
+      imagePullPolicy: Always
+      name: patch-host-whitelist
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /config
+        name: config
+      - mountPath: /media/sene/vidjo
+        name: downloads
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-7rkl8
+        readOnly: true
+    nodeName: k8s-master
+    nodeSelector:
+      kubernetes.io/hostname: k8s-master
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: config
+      persistentVolumeClaim:
+        claimName: sabnzbd-config-pvc
+    - hostPath:
+        path: /media/sene/vidjo
+        type: Directory
+      name: downloads
+    - name: kube-api-access-7rkl8
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:33:40Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-20T19:41:42Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:33:41Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:33:41Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-20T19:41:39Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://27279ca79b44223664177e610ea6334696c956a3c8a6df996c82a5fb63b35944
+      image: docker.io/linuxserver/sabnzbd:latest
+      imageID: docker.io/linuxserver/sabnzbd@sha256:7ac6fe8a521c7099e1768af90529dfee5976b87c7dccffdcc9ced00149e1aedb
+      lastState:
+        terminated:
+          containerID: containerd://d810ade778cc780b5c1d28e405ad2f6dfd6fee43d1dfb03311f3204aa3812e23
+          exitCode: 255
+          finishedAt: "2026-04-21T13:33:13Z"
+          reason: Unknown
+          startedAt: "2026-04-20T19:41:43Z"
+      name: sabnzbd
+      ready: true
+      restartCount: 1
+      started: true
+      state:
+        running:
+          startedAt: "2026-04-21T13:33:41Z"
+    hostIP: 192.168.1.13
+    hostIPs:
+    - ip: 192.168.1.13
+    initContainerStatuses:
+    - containerID: containerd://992b79dd2f0ecc908beb6128bbd49b0ff00182aad8a8dab805dc1596e79c8c47
+      image: docker.io/library/busybox:latest
+      imageID: docker.io/library/busybox@sha256:1487d0af5f52b4ba31c7e465126ee2123fe3f2305d638e7827681e7cf6c83d5e
+      lastState: {}
+      name: patch-host-whitelist
+      ready: true
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: containerd://992b79dd2f0ecc908beb6128bbd49b0ff00182aad8a8dab805dc1596e79c8c47
+          exitCode: 0
+          finishedAt: "2026-04-21T13:33:40Z"
+          reason: Completed
+          startedAt: "2026-04-21T13:33:40Z"
+    phase: Running
+    podIP: 10.244.0.88
+    podIPs:
+    - ip: 10.244.0.88
+    qosClass: BestEffort
+    startTime: "2026-04-20T19:41:39Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-04-20T17:14:52Z"
+    generateName: sabnzbd-879979974-
+    labels:
+      app: sabnzbd
+      pod-template-hash: "879979974"
+    name: sabnzbd-879979974-nmmwb
+    namespace: sabnzbd
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: sabnzbd-879979974
+      uid: 65b382c1-c480-45e8-ba41-7b539d9f7e3e
+    resourceVersion: "1442446"
+    uid: 08645a68-b15d-4bd2-8f89-6c08831c3e10
+  spec:
+    containers:
+    - image: linuxserver/sabnzbd:latest
+      imagePullPolicy: Always
+      name: sabnzbd
+      ports:
+      - containerPort: 8080
+        protocol: TCP
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /config
+        name: config
+      - mountPath: /downloads
+        name: downloads
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-wz5gt
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    initContainers:
+    - args:
+      - |
+        CONFIG_FILE=/config/sabnzbd.ini
+        if [ -f "$CONFIG_FILE" ]; then
+          grep -q sabnzbd.local.lan "$CONFIG_FILE" || sed -i 's/^host_whitelist = /host_whitelist = sabnzbd.local.lan,/' "$CONFIG_FILE"
+        fi
+      command:
+      - /bin/sh
+      - -c
+      image: busybox
+      imagePullPolicy: Always
+      name: patch-host-whitelist
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /config
+        name: config
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-wz5gt
+        readOnly: true
+    nodeName: k8s-master
+    nodeSelector:
+      kubernetes.io/hostname: k8s-master
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - emptyDir: {}
+      name: config
+    - hostPath:
+        path: /media/sene/vidjo
+        type: Directory
+      name: downloads
+    - name: kube-api-access-wz5gt
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-20T17:47:49Z"
+      message: 'The node was low on resource: ephemeral-storage. Threshold quantity:
+        15763389861, available: 13483372Ki. Container sabnzbd was using 4120Ki, request
+        is 0, has larger consumption of ephemeral-storage. '
+      reason: TerminationByKubelet
+      status: "True"
+      type: DisruptionTarget
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-20T17:47:49Z"
+      status: "False"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-20T17:14:54Z"
+      reason: PodCompleted
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-20T17:47:49Z"
+      reason: PodCompleted
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-20T17:47:49Z"
+      reason: PodCompleted
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-20T17:14:52Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://512d762507752f2a88f513e650e0880f0689614e404f9433ae30aa45dded9ac5
+      image: docker.io/linuxserver/sabnzbd:latest
+      imageID: docker.io/linuxserver/sabnzbd@sha256:7ac6fe8a521c7099e1768af90529dfee5976b87c7dccffdcc9ced00149e1aedb
+      lastState: {}
+      name: sabnzbd
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: containerd://512d762507752f2a88f513e650e0880f0689614e404f9433ae30aa45dded9ac5
+          exitCode: 0
+          finishedAt: "2026-04-20T17:47:49Z"
+          reason: Completed
+          startedAt: "2026-04-20T17:14:55Z"
+    hostIP: 192.168.1.13
+    hostIPs:
+    - ip: 192.168.1.13
+    initContainerStatuses:
+    - containerID: containerd://de143efe7bb34c5160c9e5444bf5802f4a049d7ce8736f87ff79e33caee1fd8a
+      image: docker.io/library/busybox:latest
+      imageID: docker.io/library/busybox@sha256:1487d0af5f52b4ba31c7e465126ee2123fe3f2305d638e7827681e7cf6c83d5e
+      lastState: {}
+      name: patch-host-whitelist
+      ready: true
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: containerd://de143efe7bb34c5160c9e5444bf5802f4a049d7ce8736f87ff79e33caee1fd8a
+          exitCode: 0
+          finishedAt: "2026-04-20T17:14:53Z"
+          reason: Completed
+          startedAt: "2026-04-20T17:14:53Z"
+    phase: Succeeded
+    qosClass: BestEffort
+    startTime: "2026-04-20T17:14:52Z"
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"sabnzbd","namespace":"sabnzbd"},"spec":{"ports":[{"port":8080,"protocol":"TCP","targetPort":8080}],"selector":{"app":"sabnzbd"},"type":"LoadBalancer"}}
+      metallb.io/ip-allocated-from-pool: first-pool
+    creationTimestamp: "2026-04-20T17:00:19Z"
+    name: sabnzbd
+    namespace: sabnzbd
+    resourceVersion: "1396634"
+    uid: 7a9c1446-55a5-4948-9705-0d283f2fd0f7
+  spec:
+    allocateLoadBalancerNodePorts: true
+    clusterIP: 10.111.181.18
+    clusterIPs:
+    - 10.111.181.18
+    externalTrafficPolicy: Cluster
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - nodePort: 32151
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: sabnzbd
+    sessionAffinity: None
+    type: LoadBalancer
+  status:
+    loadBalancer:
+      ingress:
+      - ip: 192.168.1.206
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "8"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"sabnzbd","namespace":"sabnzbd"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"sabnzbd"}},"template":{"metadata":{"labels":{"app":"sabnzbd"}},"spec":{"containers":[{"image":"linuxserver/sabnzbd:latest","name":"sabnzbd","ports":[{"containerPort":8080}],"volumeMounts":[{"mountPath":"/config","name":"config"},{"mountPath":"/downloads","name":"downloads"}]}],"initContainers":[{"args":["CONFIG_FILE=/config/sabnzbd.ini\nif [ -f \"$CONFIG_FILE\" ]; then\n  grep -q sabnzbd.local.lan \"$CONFIG_FILE\" || sed -i 's/^host_whitelist = /host_whitelist = sabnzbd.local.lan,/' \"$CONFIG_FILE\"\nfi\n"],"command":["/bin/sh","-c"],"image":"busybox","name":"patch-host-whitelist","volumeMounts":[{"mountPath":"/config","name":"config"}]}],"nodeSelector":{"kubernetes.io/hostname":"k8s-master"},"volumes":[{"name":"config","persistentVolumeClaim":{"claimName":"sabnzbd-config-pvc"}},{"hostPath":{"path":"/media/sene/vidjo","type":"Directory"},"name":"downloads"}]}}}}
+    creationTimestamp: "2026-04-20T16:50:03Z"
+    generation: 8
+    name: sabnzbd
+    namespace: sabnzbd
+    resourceVersion: "1430438"
+    uid: 112b4d41-9653-4b75-9478-ad89dca73f0a
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: sabnzbd
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2026-04-20T20:04:48+02:00"
+        creationTimestamp: null
+        labels:
+          app: sabnzbd
+      spec:
+        containers:
+        - image: linuxserver/sabnzbd:latest
+          imagePullPolicy: Always
+          name: sabnzbd
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config
+            name: config
+          - mountPath: /downloads
+            name: downloads
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - args:
+          - |
+            CONFIG_FILE=/config/sabnzbd.ini
+            if [ -f "$CONFIG_FILE" ]; then
+              grep -q sabnzbd.local.lan "$CONFIG_FILE" || sed -i 's/^host_whitelist = /host_whitelist = sabnzbd.local.lan,/' "$CONFIG_FILE"
+            fi
+          command:
+          - /bin/sh
+          - -c
+          image: busybox
+          imagePullPolicy: Always
+          name: patch-host-whitelist
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config
+            name: config
+          - mountPath: /media/sene/vidjo
+            name: downloads
+        nodeSelector:
+          kubernetes.io/hostname: k8s-master
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: sabnzbd-config-pvc
+        - hostPath:
+            path: /media/sene/vidjo
+            type: Directory
+          name: downloads
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-04-20T17:52:47Z"
+      lastUpdateTime: "2026-04-20T17:52:47Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2026-04-20T17:47:40Z"
+      lastUpdateTime: "2026-04-20T19:41:44Z"
+      message: ReplicaSet "sabnzbd-7c9c9f68ff" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 8
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "2"
+    creationTimestamp: "2026-04-20T16:50:35Z"
+    generation: 2
+    labels:
+      app: sabnzbd
+      pod-template-hash: 58554fc9ff
+    name: sabnzbd-58554fc9ff
+    namespace: sabnzbd
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: sabnzbd
+      uid: 112b4d41-9653-4b75-9478-ad89dca73f0a
+    resourceVersion: "1392828"
+    uid: 43206458-2ff0-4966-816f-9bc1eb2f846d
+  spec:
+    replicas: 0
+    selector:
+      matchLabels:
+        app: sabnzbd
+        pod-template-hash: 58554fc9ff
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: sabnzbd
+          pod-template-hash: 58554fc9ff
+      spec:
+        containers:
+        - image: linuxserver/sabnzbd:latest
+          imagePullPolicy: Always
+          name: sabnzbd
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config
+            name: config
+          - mountPath: /downloads
+            name: downloads
+        dnsPolicy: ClusterFirst
+        nodeSelector:
+          kubernetes.io/hostname: k8s-master
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - emptyDir: {}
+          name: config
+        - hostPath:
+            path: /media/sene/vidjo
+            type: Directory
+          name: downloads
+  status:
+    observedGeneration: 2
+    replicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "5"
+    creationTimestamp: "2026-04-20T17:13:16Z"
+    generation: 2
+    labels:
+      app: sabnzbd
+      pod-template-hash: 58865f5bc4
+    name: sabnzbd-58865f5bc4
+    namespace: sabnzbd
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: sabnzbd
+      uid: 112b4d41-9653-4b75-9478-ad89dca73f0a
+    resourceVersion: "1405651"
+    uid: 5c5e9500-3b6e-4f62-becf-85368337ec95
+  spec:
+    replicas: 0
+    selector:
+      matchLabels:
+        app: sabnzbd
+        pod-template-hash: 58865f5bc4
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: sabnzbd
+          pod-template-hash: 58865f5bc4
+      spec:
+        containers:
+        - image: linuxserver/sabnzbd:latest
+          imagePullPolicy: Always
+          name: sabnzbd
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config
+            name: config
+          - mountPath: /downloads
+            name: downloads
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - args:
+          - |
+            CONFIG_FILE=/config/sabnzbd.ini
+            if [ -f "$CONFIG_FILE" ]; then
+              grep -q sabnzbd.local.lan "$CONFIG_FILE" || sed -i 's/^host_whitelist = /host_whitelist = sabnzbd.local.lan,/' "$CONFIG_FILE"
+            fi
+          command:
+          - /bin/sh
+          - -c
+          image: busybox
+          imagePullPolicy: Always
+          name: patch-host-whitelist
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config
+            name: config
+        nodeSelector:
+          kubernetes.io/hostname: k8s-master
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: sabnzbd-config-pvc
+        - hostPath:
+            path: /media/sene/vidjo
+            type: Directory
+          name: downloads
+  status:
+    observedGeneration: 2
+    replicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-04-20T16:50:03Z"
+    generation: 2
+    labels:
+      app: sabnzbd
+      pod-template-hash: 5dd7d44557
+    name: sabnzbd-5dd7d44557
+    namespace: sabnzbd
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: sabnzbd
+      uid: 112b4d41-9653-4b75-9478-ad89dca73f0a
+    resourceVersion: "1388844"
+    uid: 2717aabc-6615-431a-bd26-b7812f6c4948
+  spec:
+    replicas: 0
+    selector:
+      matchLabels:
+        app: sabnzbd
+        pod-template-hash: 5dd7d44557
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: sabnzbd
+          pod-template-hash: 5dd7d44557
+      spec:
+        containers:
+        - image: linuxserver/sabnzbd:latest
+          imagePullPolicy: Always
+          name: sabnzbd
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config
+            name: config
+          - mountPath: /downloads
+            name: downloads
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - emptyDir: {}
+          name: config
+        - hostPath:
+            path: /media/sene/vidjo
+            type: Directory
+          name: downloads
+  status:
+    observedGeneration: 2
+    replicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "8"
+    creationTimestamp: "2026-04-20T19:41:39Z"
+    generation: 1
+    labels:
+      app: sabnzbd
+      pod-template-hash: 7c9c9f68ff
+    name: sabnzbd-7c9c9f68ff
+    namespace: sabnzbd
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: sabnzbd
+      uid: 112b4d41-9653-4b75-9478-ad89dca73f0a
+    resourceVersion: "1430425"
+    uid: 6b142e8d-c849-4df7-9f59-38a75b81d7f0
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: sabnzbd
+        pod-template-hash: 7c9c9f68ff
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2026-04-20T20:04:48+02:00"
+        creationTimestamp: null
+        labels:
+          app: sabnzbd
+          pod-template-hash: 7c9c9f68ff
+      spec:
+        containers:
+        - image: linuxserver/sabnzbd:latest
+          imagePullPolicy: Always
+          name: sabnzbd
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config
+            name: config
+          - mountPath: /downloads
+            name: downloads
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - args:
+          - |
+            CONFIG_FILE=/config/sabnzbd.ini
+            if [ -f "$CONFIG_FILE" ]; then
+              grep -q sabnzbd.local.lan "$CONFIG_FILE" || sed -i 's/^host_whitelist = /host_whitelist = sabnzbd.local.lan,/' "$CONFIG_FILE"
+            fi
+          command:
+          - /bin/sh
+          - -c
+          image: busybox
+          imagePullPolicy: Always
+          name: patch-host-whitelist
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config
+            name: config
+          - mountPath: /media/sene/vidjo
+            name: downloads
+        nodeSelector:
+          kubernetes.io/hostname: k8s-master
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: sabnzbd-config-pvc
+        - hostPath:
+            path: /media/sene/vidjo
+            type: Directory
+          name: downloads
+  status:
+    availableReplicas: 1
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "7"
+    creationTimestamp: "2026-04-20T18:07:59Z"
+    generation: 2
+    labels:
+      app: sabnzbd
+      pod-template-hash: 7d5d6557f6
+    name: sabnzbd-7d5d6557f6
+    namespace: sabnzbd
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: sabnzbd
+      uid: 112b4d41-9653-4b75-9478-ad89dca73f0a
+    resourceVersion: "1430437"
+    uid: a7b2849c-2d6d-4850-bed8-9ab9b4b39554
+  spec:
+    replicas: 0
+    selector:
+      matchLabels:
+        app: sabnzbd
+        pod-template-hash: 7d5d6557f6
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2026-04-20T20:04:48+02:00"
+        creationTimestamp: null
+        labels:
+          app: sabnzbd
+          pod-template-hash: 7d5d6557f6
+      spec:
+        containers:
+        - image: linuxserver/sabnzbd:latest
+          imagePullPolicy: Always
+          name: sabnzbd
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config
+            name: config
+          - mountPath: /downloads
+            name: downloads
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - args:
+          - |
+            CONFIG_FILE=/config/sabnzbd.ini
+            if [ -f "$CONFIG_FILE" ]; then
+              grep -q sabnzbd.local.lan "$CONFIG_FILE" || sed -i 's/^host_whitelist = /host_whitelist = sabnzbd.local.lan,/' "$CONFIG_FILE"
+            fi
+          command:
+          - /bin/sh
+          - -c
+          image: busybox
+          imagePullPolicy: Always
+          name: patch-host-whitelist
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config
+            name: config
+        nodeSelector:
+          kubernetes.io/hostname: k8s-master
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: sabnzbd-config-pvc
+        - hostPath:
+            path: /media/sene/vidjo
+            type: Directory
+          name: downloads
+  status:
+    observedGeneration: 2
+    replicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "4"
+    creationTimestamp: "2026-04-20T17:11:13Z"
+    generation: 2
+    labels:
+      app: sabnzbd
+      pod-template-hash: "879979974"
+    name: sabnzbd-879979974
+    namespace: sabnzbd
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: sabnzbd
+      uid: 112b4d41-9653-4b75-9478-ad89dca73f0a
+    resourceVersion: "1405969"
+    uid: 65b382c1-c480-45e8-ba41-7b539d9f7e3e
+  spec:
+    replicas: 0
+    selector:
+      matchLabels:
+        app: sabnzbd
+        pod-template-hash: "879979974"
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: sabnzbd
+          pod-template-hash: "879979974"
+      spec:
+        containers:
+        - image: linuxserver/sabnzbd:latest
+          imagePullPolicy: Always
+          name: sabnzbd
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config
+            name: config
+          - mountPath: /downloads
+            name: downloads
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - args:
+          - |
+            CONFIG_FILE=/config/sabnzbd.ini
+            if [ -f "$CONFIG_FILE" ]; then
+              grep -q sabnzbd.local.lan "$CONFIG_FILE" || sed -i 's/^host_whitelist = /host_whitelist = sabnzbd.local.lan,/' "$CONFIG_FILE"
+            fi
+          command:
+          - /bin/sh
+          - -c
+          image: busybox
+          imagePullPolicy: Always
+          name: patch-host-whitelist
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config
+            name: config
+        nodeSelector:
+          kubernetes.io/hostname: k8s-master
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - emptyDir: {}
+          name: config
+        - hostPath:
+            path: /media/sene/vidjo
+            type: Directory
+          name: downloads
+  status:
+    observedGeneration: 2
+    replicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "6"
+    creationTimestamp: "2026-04-20T17:59:00Z"
+    generation: 3
+    labels:
+      app: sabnzbd
+      pod-template-hash: b4d567665
+    name: sabnzbd-b4d567665
+    namespace: sabnzbd
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: sabnzbd
+      uid: 112b4d41-9653-4b75-9478-ad89dca73f0a
+    resourceVersion: "1407910"
+    uid: 6fe96aa3-211f-4c29-b89f-97a52d3b0b9c
+  spec:
+    replicas: 0
+    selector:
+      matchLabels:
+        app: sabnzbd
+        pod-template-hash: b4d567665
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2026-04-20T19:55:49+02:00"
+        creationTimestamp: null
+        labels:
+          app: sabnzbd
+          pod-template-hash: b4d567665
+      spec:
+        containers:
+        - image: linuxserver/sabnzbd:latest
+          imagePullPolicy: Always
+          name: sabnzbd
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config
+            name: config
+          - mountPath: /downloads
+            name: downloads
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - args:
+          - |
+            CONFIG_FILE=/config/sabnzbd.ini
+            if [ -f "$CONFIG_FILE" ]; then
+              grep -q sabnzbd.local.lan "$CONFIG_FILE" || sed -i 's/^host_whitelist = /host_whitelist = sabnzbd.local.lan,/' "$CONFIG_FILE"
+            fi
+          command:
+          - /bin/sh
+          - -c
+          image: busybox
+          imagePullPolicy: Always
+          name: patch-host-whitelist
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config
+            name: config
+        nodeSelector:
+          kubernetes.io/hostname: k8s-master
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: sabnzbd-config-pvc
+        - hostPath:
+            path: /media/sene/vidjo
+            type: Directory
+          name: downloads
+  status:
+    observedGeneration: 3
+    replicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "3"
+    creationTimestamp: "2026-04-20T17:07:32Z"
+    generation: 2
+    labels:
+      app: sabnzbd
+      pod-template-hash: b66f966cc
+    name: sabnzbd-b66f966cc
+    namespace: sabnzbd
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: sabnzbd
+      uid: 112b4d41-9653-4b75-9478-ad89dca73f0a
+    resourceVersion: "1393757"
+    uid: 4ff8deb7-a568-412d-95da-98204f9cbefe
+  spec:
+    replicas: 0
+    selector:
+      matchLabels:
+        app: sabnzbd
+        pod-template-hash: b66f966cc
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: sabnzbd
+          pod-template-hash: b66f966cc
+      spec:
+        containers:
+        - env:
+          - name: SABNZBD__HOST_WHITELIST
+            value: sabnzbd.local.lan,localhost,127.0.0.1
+          image: linuxserver/sabnzbd:latest
+          imagePullPolicy: Always
+          name: sabnzbd
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config
+            name: config
+          - mountPath: /downloads
+            name: downloads
+        dnsPolicy: ClusterFirst
+        nodeSelector:
+          kubernetes.io/hostname: k8s-master
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - emptyDir: {}
+          name: config
+        - hostPath:
+            path: /media/sene/vidjo
+            type: Directory
+          name: downloads
+  status:
+    observedGeneration: 2
+    replicas: 0
+kind: List
+metadata:
+  resourceVersion: ""

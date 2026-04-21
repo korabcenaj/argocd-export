@@ -1,0 +1,825 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/restartedAt: "2026-04-20T18:56:00Z"
+    creationTimestamp: "2026-04-20T19:33:53Z"
+    generateName: sonarr-754df88b77-
+    labels:
+      app.kubernetes.io/instance: sonarr
+      app.kubernetes.io/name: sonarr
+      pod-template-hash: 754df88b77
+    name: sonarr-754df88b77-fzvf2
+    namespace: sonarr
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: sonarr-754df88b77
+      uid: 977cf836-4422-4496-a2d9-956c8a9fa7ae
+    resourceVersion: "1442911"
+    uid: 8470f9ac-22fc-498e-a643-965107ee0cb8
+  spec:
+    automountServiceAccountToken: true
+    containers:
+    - env:
+      - name: TZ
+        value: UTC
+      image: ghcr.io/k8s-at-home/sonarr:v3.0.8.1507
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        exec:
+          command:
+          - /usr/bin/env
+          - bash
+          - -c
+          - curl --fail localhost:8989/api/v3/system/status?apiKey=`IFS=\> && while
+            read -d \< E C; do if [[ $E = "ApiKey" ]]; then echo $C; fi; done < /config/config.xml`
+        failureThreshold: 5
+        initialDelaySeconds: 60
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 10
+      name: sonarr
+      ports:
+      - containerPort: 8989
+        name: http
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        periodSeconds: 10
+        successThreshold: 1
+        tcpSocket:
+          port: 8989
+        timeoutSeconds: 1
+      resources: {}
+      startupProbe:
+        failureThreshold: 30
+        periodSeconds: 5
+        successThreshold: 1
+        tcpSocket:
+          port: 8989
+        timeoutSeconds: 1
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /config
+        name: config
+      - mountPath: /media/sene/vidjo
+        name: media
+      - mountPath: /downloads
+        name: downloads
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-258f5
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: k8s-master
+    nodeSelector:
+      kubernetes.io/hostname: k8s-master
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: config
+      persistentVolumeClaim:
+        claimName: sonarr-config-pvc
+    - hostPath:
+        path: /media/sene/downloads
+        type: Directory
+      name: downloads
+    - hostPath:
+        path: /media/sene/vidjo
+        type: Directory
+      name: media
+    - name: kube-api-access-258f5
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:33:32Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-20T19:33:53Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:33:36Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-21T13:33:36Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-04-20T19:33:53Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://95cc6eff64238fdb38b6e1d7537763550b28e456f38e0f77761d4eaa3434983d
+      image: ghcr.io/k8s-at-home/sonarr:v3.0.8.1507
+      imageID: ghcr.io/k8s-at-home/sonarr@sha256:0eb230e2381a874ca53a512068aabcee6f98c901de8446e0f1fc84b97206a1ee
+      lastState:
+        terminated:
+          containerID: containerd://1d0da7799ee3bfd0f4a53740941e318180b601324ff39a6baf4c45fd1fd800a4
+          exitCode: 255
+          finishedAt: "2026-04-21T13:33:13Z"
+          reason: Unknown
+          startedAt: "2026-04-20T20:28:53Z"
+      name: sonarr
+      ready: true
+      restartCount: 2
+      started: true
+      state:
+        running:
+          startedAt: "2026-04-21T13:33:32Z"
+    hostIP: 192.168.1.13
+    hostIPs:
+    - ip: 192.168.1.13
+    phase: Running
+    podIP: 10.244.0.83
+    podIPs:
+    - ip: 10.244.0.83
+    qosClass: BestEffort
+    startTime: "2026-04-20T19:33:53Z"
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: sonarr
+      meta.helm.sh/release-namespace: sonarr
+      metallb.io/ip-allocated-from-pool: first-pool
+    creationTimestamp: "2026-04-17T11:07:17Z"
+    labels:
+      app.kubernetes.io/instance: sonarr
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: sonarr
+      app.kubernetes.io/version: v3.0.8.1507
+      helm.sh/chart: sonarr-16.3.2
+    name: sonarr
+    namespace: sonarr
+    resourceVersion: "1174153"
+    uid: b3ba58df-8c87-44ea-bda6-293e8aaa1c66
+  spec:
+    allocateLoadBalancerNodePorts: true
+    clusterIP: 10.102.144.86
+    clusterIPs:
+    - 10.102.144.86
+    externalTrafficPolicy: Cluster
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      nodePort: 30205
+      port: 8989
+      protocol: TCP
+      targetPort: http
+    selector:
+      app.kubernetes.io/instance: sonarr
+      app.kubernetes.io/name: sonarr
+    sessionAffinity: None
+    type: LoadBalancer
+  status:
+    loadBalancer:
+      ingress:
+      - ip: 192.168.1.205
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "9"
+      meta.helm.sh/release-name: sonarr
+      meta.helm.sh/release-namespace: sonarr
+    creationTimestamp: "2026-04-17T11:07:17Z"
+    generation: 9
+    labels:
+      app.kubernetes.io/instance: sonarr
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: sonarr
+      app.kubernetes.io/version: v3.0.8.1507
+      helm.sh/chart: sonarr-16.3.2
+    name: sonarr
+    namespace: sonarr
+    resourceVersion: "1441585"
+    uid: 132d63f6-6ed6-480a-b7f0-90abd2892076
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 3
+    selector:
+      matchLabels:
+        app.kubernetes.io/instance: sonarr
+        app.kubernetes.io/name: sonarr
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2026-04-20T18:56:00Z"
+        creationTimestamp: null
+        labels:
+          app.kubernetes.io/instance: sonarr
+          app.kubernetes.io/name: sonarr
+      spec:
+        automountServiceAccountToken: true
+        containers:
+        - env:
+          - name: TZ
+            value: UTC
+          image: ghcr.io/k8s-at-home/sonarr:v3.0.8.1507
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            exec:
+              command:
+              - /usr/bin/env
+              - bash
+              - -c
+              - curl --fail localhost:8989/api/v3/system/status?apiKey=`IFS=\> &&
+                while read -d \< E C; do if [[ $E = "ApiKey" ]]; then echo $C; fi;
+                done < /config/config.xml`
+            failureThreshold: 5
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10
+          name: sonarr
+          ports:
+          - containerPort: 8989
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 8989
+            timeoutSeconds: 1
+          resources: {}
+          startupProbe:
+            failureThreshold: 30
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: 8989
+            timeoutSeconds: 1
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config
+            name: config
+          - mountPath: /media/sene/vidjo
+            name: media
+          - mountPath: /downloads
+            name: downloads
+        dnsPolicy: ClusterFirst
+        enableServiceLinks: true
+        nodeSelector:
+          kubernetes.io/hostname: k8s-master
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: default
+        serviceAccountName: default
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: sonarr-config-pvc
+        - hostPath:
+            path: /media/sene/downloads
+            type: Directory
+          name: downloads
+        - hostPath:
+            path: /media/sene/vidjo
+            type: Directory
+          name: media
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-04-20T18:55:55Z"
+      lastUpdateTime: "2026-04-20T19:33:59Z"
+      message: ReplicaSet "sonarr-754df88b77" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-04-20T20:28:59Z"
+      lastUpdateTime: "2026-04-20T20:28:59Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 9
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "1"
+      deployment.kubernetes.io/revision: "9"
+      meta.helm.sh/release-name: sonarr
+      meta.helm.sh/release-namespace: sonarr
+    creationTimestamp: "2026-04-20T19:33:53Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/instance: sonarr
+      app.kubernetes.io/name: sonarr
+      pod-template-hash: 754df88b77
+    name: sonarr-754df88b77
+    namespace: sonarr
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: sonarr
+      uid: 132d63f6-6ed6-480a-b7f0-90abd2892076
+    resourceVersion: "1441584"
+    uid: 977cf836-4422-4496-a2d9-956c8a9fa7ae
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app.kubernetes.io/instance: sonarr
+        app.kubernetes.io/name: sonarr
+        pod-template-hash: 754df88b77
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2026-04-20T18:56:00Z"
+        creationTimestamp: null
+        labels:
+          app.kubernetes.io/instance: sonarr
+          app.kubernetes.io/name: sonarr
+          pod-template-hash: 754df88b77
+      spec:
+        automountServiceAccountToken: true
+        containers:
+        - env:
+          - name: TZ
+            value: UTC
+          image: ghcr.io/k8s-at-home/sonarr:v3.0.8.1507
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            exec:
+              command:
+              - /usr/bin/env
+              - bash
+              - -c
+              - curl --fail localhost:8989/api/v3/system/status?apiKey=`IFS=\> &&
+                while read -d \< E C; do if [[ $E = "ApiKey" ]]; then echo $C; fi;
+                done < /config/config.xml`
+            failureThreshold: 5
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10
+          name: sonarr
+          ports:
+          - containerPort: 8989
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 8989
+            timeoutSeconds: 1
+          resources: {}
+          startupProbe:
+            failureThreshold: 30
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: 8989
+            timeoutSeconds: 1
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config
+            name: config
+          - mountPath: /media/sene/vidjo
+            name: media
+          - mountPath: /downloads
+            name: downloads
+        dnsPolicy: ClusterFirst
+        enableServiceLinks: true
+        nodeSelector:
+          kubernetes.io/hostname: k8s-master
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: default
+        serviceAccountName: default
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: sonarr-config-pvc
+        - hostPath:
+            path: /media/sene/downloads
+            type: Directory
+          name: downloads
+        - hostPath:
+            path: /media/sene/vidjo
+            type: Directory
+          name: media
+  status:
+    availableReplicas: 1
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "1"
+      deployment.kubernetes.io/revision: "6"
+      meta.helm.sh/release-name: sonarr
+      meta.helm.sh/release-namespace: sonarr
+    creationTimestamp: "2026-04-20T18:29:06Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/instance: sonarr
+      app.kubernetes.io/name: sonarr
+      pod-template-hash: 948954f58
+    name: sonarr-948954f58
+    namespace: sonarr
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: sonarr
+      uid: 132d63f6-6ed6-480a-b7f0-90abd2892076
+    resourceVersion: "1419490"
+    uid: 7ba6394c-6537-4565-a8fb-6e2711fa93ec
+  spec:
+    replicas: 0
+    selector:
+      matchLabels:
+        app.kubernetes.io/instance: sonarr
+        app.kubernetes.io/name: sonarr
+        pod-template-hash: 948954f58
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2026-04-20T18:29:06Z"
+        creationTimestamp: null
+        labels:
+          app.kubernetes.io/instance: sonarr
+          app.kubernetes.io/name: sonarr
+          pod-template-hash: 948954f58
+      spec:
+        automountServiceAccountToken: true
+        containers:
+        - env:
+          - name: TZ
+            value: UTC
+          image: ghcr.io/k8s-at-home/sonarr:v3.0.8.1507
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            exec:
+              command:
+              - /usr/bin/env
+              - bash
+              - -c
+              - curl --fail localhost:8989/api/v3/system/status?apiKey=`IFS=\> &&
+                while read -d \< E C; do if [[ $E = "ApiKey" ]]; then echo $C; fi;
+                done < /config/config.xml`
+            failureThreshold: 5
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10
+          name: sonarr
+          ports:
+          - containerPort: 8989
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 8989
+            timeoutSeconds: 1
+          resources: {}
+          startupProbe:
+            failureThreshold: 30
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: 8989
+            timeoutSeconds: 1
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config
+            name: config
+          - mountPath: /media/sene/vidjo
+            name: media
+          - mountPath: /downloads
+            name: downloads
+        dnsPolicy: ClusterFirst
+        enableServiceLinks: true
+        nodeSelector:
+          kubernetes.io/hostname: k8s-master
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: default
+        serviceAccountName: default
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: sonarr-config-pvc
+        - name: media
+          persistentVolumeClaim:
+            claimName: sonarr-media
+        - hostPath:
+            path: /media/sene/vidjo
+            type: Directory
+          name: downloads
+  status:
+    observedGeneration: 2
+    replicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "1"
+      deployment.kubernetes.io/revision: "7"
+      meta.helm.sh/release-name: sonarr
+      meta.helm.sh/release-namespace: sonarr
+    creationTimestamp: "2026-04-20T18:56:02Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/instance: sonarr
+      app.kubernetes.io/name: sonarr
+      pod-template-hash: 97b7944bb
+    name: sonarr-97b7944bb
+    namespace: sonarr
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: sonarr
+      uid: 132d63f6-6ed6-480a-b7f0-90abd2892076
+    resourceVersion: "1427371"
+    uid: 4299f550-a396-431b-b435-0938b86b7956
+  spec:
+    replicas: 0
+    selector:
+      matchLabels:
+        app.kubernetes.io/instance: sonarr
+        app.kubernetes.io/name: sonarr
+        pod-template-hash: 97b7944bb
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2026-04-20T18:56:00Z"
+        creationTimestamp: null
+        labels:
+          app.kubernetes.io/instance: sonarr
+          app.kubernetes.io/name: sonarr
+          pod-template-hash: 97b7944bb
+      spec:
+        automountServiceAccountToken: true
+        containers:
+        - env:
+          - name: TZ
+            value: UTC
+          image: ghcr.io/k8s-at-home/sonarr:v3.0.8.1507
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            exec:
+              command:
+              - /usr/bin/env
+              - bash
+              - -c
+              - curl --fail localhost:8989/api/v3/system/status?apiKey=`IFS=\> &&
+                while read -d \< E C; do if [[ $E = "ApiKey" ]]; then echo $C; fi;
+                done < /config/config.xml`
+            failureThreshold: 5
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10
+          name: sonarr
+          ports:
+          - containerPort: 8989
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 8989
+            timeoutSeconds: 1
+          resources: {}
+          startupProbe:
+            failureThreshold: 30
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: 8989
+            timeoutSeconds: 1
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config
+            name: config
+          - mountPath: /media/sene/vidjo
+            name: media
+          - mountPath: /downloads
+            name: downloads
+        dnsPolicy: ClusterFirst
+        enableServiceLinks: true
+        nodeSelector:
+          kubernetes.io/hostname: k8s-master
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: default
+        serviceAccountName: default
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: sonarr-config-pvc
+        - name: media
+          persistentVolumeClaim:
+            claimName: sonarr-media
+        - hostPath:
+            path: /media/sene/vidjo
+            type: Directory
+          name: downloads
+  status:
+    observedGeneration: 2
+    replicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "1"
+      deployment.kubernetes.io/revision: "8"
+      meta.helm.sh/release-name: sonarr
+      meta.helm.sh/release-namespace: sonarr
+    creationTimestamp: "2026-04-20T19:29:12Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/instance: sonarr
+      app.kubernetes.io/name: sonarr
+      pod-template-hash: cfbb4bf9b
+    name: sonarr-cfbb4bf9b
+    namespace: sonarr
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: sonarr
+      uid: 132d63f6-6ed6-480a-b7f0-90abd2892076
+    resourceVersion: "1428527"
+    uid: 2066ca2b-8e44-45a7-8baa-c022462a2bcb
+  spec:
+    replicas: 0
+    selector:
+      matchLabels:
+        app.kubernetes.io/instance: sonarr
+        app.kubernetes.io/name: sonarr
+        pod-template-hash: cfbb4bf9b
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2026-04-20T18:56:00Z"
+        creationTimestamp: null
+        labels:
+          app.kubernetes.io/instance: sonarr
+          app.kubernetes.io/name: sonarr
+          pod-template-hash: cfbb4bf9b
+      spec:
+        automountServiceAccountToken: true
+        containers:
+        - env:
+          - name: TZ
+            value: UTC
+          image: ghcr.io/k8s-at-home/sonarr:v3.0.8.1507
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            exec:
+              command:
+              - /usr/bin/env
+              - bash
+              - -c
+              - curl --fail localhost:8989/api/v3/system/status?apiKey=`IFS=\> &&
+                while read -d \< E C; do if [[ $E = "ApiKey" ]]; then echo $C; fi;
+                done < /config/config.xml`
+            failureThreshold: 5
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10
+          name: sonarr
+          ports:
+          - containerPort: 8989
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 8989
+            timeoutSeconds: 1
+          resources: {}
+          startupProbe:
+            failureThreshold: 30
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: 8989
+            timeoutSeconds: 1
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /config
+            name: config
+          - mountPath: /media/sene/vidjo
+            name: media
+          - mountPath: /downloads
+            name: downloads
+        dnsPolicy: ClusterFirst
+        enableServiceLinks: true
+        nodeSelector:
+          kubernetes.io/hostname: k8s-master
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: default
+        serviceAccountName: default
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: sonarr-config-pvc
+        - name: downloads
+          persistentVolumeClaim:
+            claimName: sonarr-media
+        - hostPath:
+            path: /media/sene/vidjo
+            type: Directory
+          name: media
+  status:
+    observedGeneration: 2
+    replicas: 0
+kind: List
+metadata:
+  resourceVersion: ""
