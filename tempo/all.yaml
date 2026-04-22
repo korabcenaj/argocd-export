@@ -1,206 +1,11 @@
 apiVersion: v1
 items:
 - apiVersion: v1
-  kind: Pod
-  metadata:
-    annotations:
-      checksum/config: 320322d4a760f7c04e8dad8a8667d3c498e6831582310b574624019308295886
-    creationTimestamp: "2026-04-19T12:36:08Z"
-    generateName: tempo-
-    labels:
-      app.kubernetes.io/instance: tempo
-      app.kubernetes.io/name: tempo
-      apps.kubernetes.io/pod-index: "0"
-      controller-revision-hash: tempo-685c79c887
-      statefulset.kubernetes.io/pod-name: tempo-0
-    name: tempo-0
-    namespace: tempo
-    ownerReferences:
-    - apiVersion: apps/v1
-      blockOwnerDeletion: true
-      controller: true
-      kind: StatefulSet
-      name: tempo
-      uid: bf7c09f2-a730-49c1-bbe7-6f01c921fd2d
-    resourceVersion: "1443878"
-    uid: 8a110512-ea7d-4ac1-bb3d-51ff77866c2c
-  spec:
-    automountServiceAccountToken: true
-    containers:
-    - args:
-      - -config.file=/conf/tempo.yaml
-      - -mem-ballast-size-mbs=1024
-      image: docker.io/grafana/tempo:2.9.0
-      imagePullPolicy: IfNotPresent
-      livenessProbe:
-        failureThreshold: 3
-        httpGet:
-          path: /ready
-          port: 3200
-          scheme: HTTP
-        initialDelaySeconds: 30
-        periodSeconds: 10
-        successThreshold: 1
-        timeoutSeconds: 5
-      name: tempo
-      ports:
-      - containerPort: 3200
-        name: prom-metrics
-        protocol: TCP
-      - containerPort: 6831
-        name: jaeger-thrift-c
-        protocol: UDP
-      - containerPort: 6832
-        name: jaeger-thrift-b
-        protocol: UDP
-      - containerPort: 14268
-        name: jaeger-thrift-h
-        protocol: TCP
-      - containerPort: 14250
-        name: jaeger-grpc
-        protocol: TCP
-      - containerPort: 9411
-        name: zipkin
-        protocol: TCP
-      - containerPort: 55680
-        name: otlp-legacy
-        protocol: TCP
-      - containerPort: 4317
-        name: otlp-grpc
-        protocol: TCP
-      - containerPort: 55681
-        name: otlp-httplegacy
-        protocol: TCP
-      - containerPort: 4318
-        name: otlp-http
-        protocol: TCP
-      - containerPort: 55678
-        name: opencensus
-        protocol: TCP
-      readinessProbe:
-        failureThreshold: 3
-        httpGet:
-          path: /ready
-          port: 3200
-          scheme: HTTP
-        initialDelaySeconds: 20
-        periodSeconds: 10
-        successThreshold: 1
-        timeoutSeconds: 5
-      resources: {}
-      terminationMessagePath: /dev/termination-log
-      terminationMessagePolicy: File
-      volumeMounts:
-      - mountPath: /conf
-        name: tempo-conf
-      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-        name: kube-api-access-27d9l
-        readOnly: true
-    dnsPolicy: ClusterFirst
-    enableServiceLinks: true
-    hostname: tempo-0
-    nodeName: k8s2
-    preemptionPolicy: PreemptLowerPriority
-    priority: 0
-    restartPolicy: Always
-    schedulerName: default-scheduler
-    securityContext:
-      fsGroup: 10001
-      runAsGroup: 10001
-      runAsNonRoot: true
-      runAsUser: 10001
-    serviceAccount: tempo
-    serviceAccountName: tempo
-    subdomain: tempo-headless
-    terminationGracePeriodSeconds: 30
-    tolerations:
-    - effect: NoExecute
-      key: node.kubernetes.io/not-ready
-      operator: Exists
-      tolerationSeconds: 300
-    - effect: NoExecute
-      key: node.kubernetes.io/unreachable
-      operator: Exists
-      tolerationSeconds: 300
-    volumes:
-    - configMap:
-        defaultMode: 420
-        name: tempo
-      name: tempo-conf
-    - name: kube-api-access-27d9l
-      projected:
-        defaultMode: 420
-        sources:
-        - serviceAccountToken:
-            expirationSeconds: 3607
-            path: token
-        - configMap:
-            items:
-            - key: ca.crt
-              path: ca.crt
-            name: kube-root-ca.crt
-        - downwardAPI:
-            items:
-            - fieldRef:
-                apiVersion: v1
-                fieldPath: metadata.namespace
-              path: namespace
-  status:
-    conditions:
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-21T13:33:45Z"
-      status: "True"
-      type: PodReadyToStartContainers
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-19T12:36:08Z"
-      status: "True"
-      type: Initialized
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-21T13:34:33Z"
-      status: "True"
-      type: Ready
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-21T13:34:33Z"
-      status: "True"
-      type: ContainersReady
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-19T12:36:08Z"
-      status: "True"
-      type: PodScheduled
-    containerStatuses:
-    - containerID: containerd://2ad3511443c7af91d9a746cb4c7737be874bd8a8f893cc268b957895b4232ae1
-      image: docker.io/grafana/tempo:2.9.0
-      imageID: docker.io/grafana/tempo@sha256:65a5789759435f1ef696f1953258b9bbdb18eb571d5ce711ff812d2e128288a4
-      lastState:
-        terminated:
-          containerID: containerd://dd3ecf12488bfa117a0f05cf8eace453d78e90b1f539c64013eba1359b8112ca
-          exitCode: 255
-          finishedAt: "2026-04-21T13:33:12Z"
-          reason: Unknown
-          startedAt: "2026-04-20T12:17:42Z"
-      name: tempo
-      ready: true
-      restartCount: 2
-      started: true
-      state:
-        running:
-          startedAt: "2026-04-21T13:33:45Z"
-    hostIP: 192.168.1.29
-    hostIPs:
-    - ip: 192.168.1.29
-    phase: Running
-    podIP: 10.244.2.71
-    podIPs:
-    - ip: 10.244.2.71
-    qosClass: BestEffort
-    startTime: "2026-04-19T12:36:08Z"
-- apiVersion: v1
   kind: Service
   metadata:
     annotations:
       meta.helm.sh/release-name: tempo
       meta.helm.sh/release-namespace: tempo
-    creationTimestamp: "2026-04-19T12:36:08Z"
     labels:
       app.kubernetes.io/instance: tempo
       app.kubernetes.io/managed-by: Helm
@@ -209,8 +14,6 @@ items:
       helm.sh/chart: tempo-1.24.4
     name: tempo
     namespace: tempo
-    resourceVersion: "1222513"
-    uid: c93655e3-463f-46f7-a039-d81c6db0d5ba
   spec:
     clusterIP: 10.99.70.62
     clusterIPs:
@@ -269,15 +72,12 @@ items:
       app.kubernetes.io/name: tempo
     sessionAffinity: None
     type: ClusterIP
-  status:
-    loadBalancer: {}
 - apiVersion: apps/v1
   kind: StatefulSet
   metadata:
     annotations:
       meta.helm.sh/release-name: tempo
       meta.helm.sh/release-namespace: tempo
-    creationTimestamp: "2026-04-19T12:36:08Z"
     generation: 1
     labels:
       app.kubernetes.io/instance: tempo
@@ -287,8 +87,6 @@ items:
       helm.sh/chart: tempo-1.24.4
     name: tempo
     namespace: tempo
-    resourceVersion: "1443881"
-    uid: bf7c09f2-a730-49c1-bbe7-6f01c921fd2d
   spec:
     persistentVolumeClaimRetentionPolicy:
       whenDeleted: Retain
@@ -396,16 +194,6 @@ items:
           name: tempo-conf
     updateStrategy:
       type: RollingUpdate
-  status:
-    availableReplicas: 1
-    collisionCount: 0
-    currentReplicas: 1
-    currentRevision: tempo-685c79c887
-    observedGeneration: 1
-    readyReplicas: 1
-    replicas: 1
-    updateRevision: tempo-685c79c887
-    updatedReplicas: 1
 kind: List
 metadata:
-  resourceVersion: ""
+  resourceVersion: ''

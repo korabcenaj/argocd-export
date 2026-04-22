@@ -1,976 +1,11 @@
 apiVersion: v1
 items:
 - apiVersion: v1
-  kind: Pod
-  metadata:
-    annotations:
-      checksum/config: f7c516d64b976f04d4c31a243b6c2091ced173f942f6315d3ee2ba37ca7c0bd9
-      prometheus.io/port: http-metrics
-      prometheus.io/scrape: "true"
-    creationTimestamp: "2026-04-19T12:35:56Z"
-    generateName: loki-
-    labels:
-      app: loki
-      apps.kubernetes.io/pod-index: "0"
-      controller-revision-hash: loki-9cfdd959f
-      name: loki
-      release: loki
-      statefulset.kubernetes.io/pod-name: loki-0
-    name: loki-0
-    namespace: loki
-    ownerReferences:
-    - apiVersion: apps/v1
-      blockOwnerDeletion: true
-      controller: true
-      kind: StatefulSet
-      name: loki
-      uid: e7e4e6ce-137b-432e-b0a3-b1f7aeca60ab
-    resourceVersion: "1222432"
-    uid: f27651e4-89dd-4a02-ac00-17fc08d683c2
-  spec:
-    affinity: {}
-    containers:
-    - args:
-      - -config.file=/etc/loki/loki.yaml
-      image: grafana/loki:2.6.1
-      imagePullPolicy: IfNotPresent
-      livenessProbe:
-        failureThreshold: 3
-        httpGet:
-          path: /ready
-          port: http-metrics
-          scheme: HTTP
-        initialDelaySeconds: 45
-        periodSeconds: 10
-        successThreshold: 1
-        timeoutSeconds: 1
-      name: loki
-      ports:
-      - containerPort: 3100
-        name: http-metrics
-        protocol: TCP
-      - containerPort: 9095
-        name: grpc
-        protocol: TCP
-      - containerPort: 7946
-        name: memberlist-port
-        protocol: TCP
-      readinessProbe:
-        failureThreshold: 3
-        httpGet:
-          path: /ready
-          port: http-metrics
-          scheme: HTTP
-        initialDelaySeconds: 45
-        periodSeconds: 10
-        successThreshold: 1
-        timeoutSeconds: 1
-      resources: {}
-      securityContext:
-        readOnlyRootFilesystem: true
-      terminationMessagePath: /dev/termination-log
-      terminationMessagePolicy: File
-      volumeMounts:
-      - mountPath: /tmp
-        name: tmp
-      - mountPath: /etc/loki
-        name: config
-      - mountPath: /data
-        name: storage
-      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-        name: kube-api-access-z8p7v
-        readOnly: true
-    dnsPolicy: ClusterFirst
-    enableServiceLinks: true
-    hostname: loki-0
-    preemptionPolicy: PreemptLowerPriority
-    priority: 0
-    restartPolicy: Always
-    schedulerName: default-scheduler
-    securityContext:
-      fsGroup: 10001
-      runAsGroup: 10001
-      runAsNonRoot: true
-      runAsUser: 10001
-    serviceAccount: loki
-    serviceAccountName: loki
-    subdomain: loki-headless
-    terminationGracePeriodSeconds: 4800
-    tolerations:
-    - effect: NoExecute
-      key: node.kubernetes.io/not-ready
-      operator: Exists
-      tolerationSeconds: 300
-    - effect: NoExecute
-      key: node.kubernetes.io/unreachable
-      operator: Exists
-      tolerationSeconds: 300
-    volumes:
-    - name: storage
-      persistentVolumeClaim:
-        claimName: storage-loki-0
-    - emptyDir: {}
-      name: tmp
-    - name: config
-      secret:
-        defaultMode: 420
-        secretName: loki
-    - name: kube-api-access-z8p7v
-      projected:
-        defaultMode: 420
-        sources:
-        - serviceAccountToken:
-            expirationSeconds: 3607
-            path: token
-        - configMap:
-            items:
-            - key: ca.crt
-              path: ca.crt
-            name: kube-root-ca.crt
-        - downwardAPI:
-            items:
-            - fieldRef:
-                apiVersion: v1
-                fieldPath: metadata.namespace
-              path: namespace
-  status:
-    conditions:
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-19T12:35:56Z"
-      message: '0/4 nodes are available: pod has unbound immediate PersistentVolumeClaims.
-        preemption: 0/4 nodes are available: 4 Preemption is not helpful for scheduling.'
-      reason: Unschedulable
-      status: "False"
-      type: PodScheduled
-    phase: Pending
-    qosClass: BestEffort
-- apiVersion: v1
-  kind: Pod
-  metadata:
-    annotations:
-      checksum/config: 0f49fcd7a8fab642f9644e0a4d67b9f2bf9ce3e2cbf1f2ebfa7a301dbd59a7e0
-    creationTimestamp: "2026-04-19T12:35:56Z"
-    generateName: loki-promtail-
-    labels:
-      app.kubernetes.io/instance: loki
-      app.kubernetes.io/name: promtail
-      controller-revision-hash: 65d98c5466
-      pod-template-generation: "1"
-    name: loki-promtail-2n9kg
-    namespace: loki
-    ownerReferences:
-    - apiVersion: apps/v1
-      blockOwnerDeletion: true
-      controller: true
-      kind: DaemonSet
-      name: loki-promtail
-      uid: 807b44f6-d89e-4f06-a701-4b379f7f5099
-    resourceVersion: "1446059"
-    uid: ea363698-76d1-4fb6-8399-79e9a3292cbf
-  spec:
-    affinity:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-          - matchFields:
-            - key: metadata.name
-              operator: In
-              values:
-              - k8s2
-    automountServiceAccountToken: true
-    containers:
-    - args:
-      - -config.file=/etc/promtail/promtail.yaml
-      env:
-      - name: HOSTNAME
-        valueFrom:
-          fieldRef:
-            apiVersion: v1
-            fieldPath: spec.nodeName
-      image: docker.io/grafana/promtail:3.5.1
-      imagePullPolicy: IfNotPresent
-      name: promtail
-      ports:
-      - containerPort: 3101
-        name: http-metrics
-        protocol: TCP
-      readinessProbe:
-        failureThreshold: 5
-        httpGet:
-          path: /ready
-          port: http-metrics
-          scheme: HTTP
-        initialDelaySeconds: 10
-        periodSeconds: 10
-        successThreshold: 1
-        timeoutSeconds: 1
-      resources: {}
-      securityContext:
-        allowPrivilegeEscalation: false
-        capabilities:
-          drop:
-          - ALL
-        readOnlyRootFilesystem: true
-      terminationMessagePath: /dev/termination-log
-      terminationMessagePolicy: File
-      volumeMounts:
-      - mountPath: /etc/promtail
-        name: config
-      - mountPath: /run/promtail
-        name: run
-      - mountPath: /var/lib/docker/containers
-        name: containers
-        readOnly: true
-      - mountPath: /var/log/pods
-        name: pods
-        readOnly: true
-      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-        name: kube-api-access-5gp6b
-        readOnly: true
-    dnsPolicy: ClusterFirst
-    enableServiceLinks: true
-    nodeName: k8s2
-    preemptionPolicy: PreemptLowerPriority
-    priority: 0
-    restartPolicy: Always
-    schedulerName: default-scheduler
-    securityContext:
-      runAsGroup: 0
-      runAsUser: 0
-    serviceAccount: loki-promtail
-    serviceAccountName: loki-promtail
-    terminationGracePeriodSeconds: 30
-    tolerations:
-    - effect: NoSchedule
-      key: node-role.kubernetes.io/master
-      operator: Exists
-    - effect: NoSchedule
-      key: node-role.kubernetes.io/control-plane
-      operator: Exists
-    - effect: NoExecute
-      key: node.kubernetes.io/not-ready
-      operator: Exists
-    - effect: NoExecute
-      key: node.kubernetes.io/unreachable
-      operator: Exists
-    - effect: NoSchedule
-      key: node.kubernetes.io/disk-pressure
-      operator: Exists
-    - effect: NoSchedule
-      key: node.kubernetes.io/memory-pressure
-      operator: Exists
-    - effect: NoSchedule
-      key: node.kubernetes.io/pid-pressure
-      operator: Exists
-    - effect: NoSchedule
-      key: node.kubernetes.io/unschedulable
-      operator: Exists
-    volumes:
-    - name: config
-      secret:
-        defaultMode: 420
-        secretName: loki-promtail
-    - hostPath:
-        path: /run/promtail
-        type: ""
-      name: run
-    - hostPath:
-        path: /var/lib/docker/containers
-        type: ""
-      name: containers
-    - hostPath:
-        path: /var/log/pods
-        type: ""
-      name: pods
-    - name: kube-api-access-5gp6b
-      projected:
-        defaultMode: 420
-        sources:
-        - serviceAccountToken:
-            expirationSeconds: 3607
-            path: token
-        - configMap:
-            items:
-            - key: ca.crt
-              path: ca.crt
-            name: kube-root-ca.crt
-        - downwardAPI:
-            items:
-            - fieldRef:
-                apiVersion: v1
-                fieldPath: metadata.namespace
-              path: namespace
-  status:
-    conditions:
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-21T13:33:48Z"
-      status: "True"
-      type: PodReadyToStartContainers
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-19T12:35:56Z"
-      status: "True"
-      type: Initialized
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-21T13:41:04Z"
-      status: "True"
-      type: Ready
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-21T13:41:04Z"
-      status: "True"
-      type: ContainersReady
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-19T12:35:56Z"
-      status: "True"
-      type: PodScheduled
-    containerStatuses:
-    - containerID: containerd://b6466e6716c91ca6c7fa15b5fade9430c58ef6c677a53b17af862fd457f27860
-      image: docker.io/grafana/promtail:3.5.1
-      imageID: docker.io/grafana/promtail@sha256:65bfae480b572854180c78f7dc567a4ad2ba548b0c410e696baa1e0fa6381299
-      lastState:
-        terminated:
-          containerID: containerd://4117e1d4d2367f6a43c418d109a19ad75bb2c193b5a6ff4c4763c2c4468f4987
-          exitCode: 255
-          finishedAt: "2026-04-21T13:33:12Z"
-          reason: Unknown
-          startedAt: "2026-04-20T12:17:35Z"
-      name: promtail
-      ready: true
-      restartCount: 2
-      started: true
-      state:
-        running:
-          startedAt: "2026-04-21T13:33:48Z"
-    hostIP: 192.168.1.29
-    hostIPs:
-    - ip: 192.168.1.29
-    phase: Running
-    podIP: 10.244.2.77
-    podIPs:
-    - ip: 10.244.2.77
-    qosClass: BestEffort
-    startTime: "2026-04-19T12:35:56Z"
-- apiVersion: v1
-  kind: Pod
-  metadata:
-    annotations:
-      checksum/config: 0f49fcd7a8fab642f9644e0a4d67b9f2bf9ce3e2cbf1f2ebfa7a301dbd59a7e0
-    creationTimestamp: "2026-04-19T12:35:56Z"
-    generateName: loki-promtail-
-    labels:
-      app.kubernetes.io/instance: loki
-      app.kubernetes.io/name: promtail
-      controller-revision-hash: 65d98c5466
-      pod-template-generation: "1"
-    name: loki-promtail-95r29
-    namespace: loki
-    ownerReferences:
-    - apiVersion: apps/v1
-      blockOwnerDeletion: true
-      controller: true
-      kind: DaemonSet
-      name: loki-promtail
-      uid: 807b44f6-d89e-4f06-a701-4b379f7f5099
-    resourceVersion: "1443849"
-    uid: 81701c52-b908-4964-8ddd-089ddf75269a
-  spec:
-    affinity:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-          - matchFields:
-            - key: metadata.name
-              operator: In
-              values:
-              - k8s
-    automountServiceAccountToken: true
-    containers:
-    - args:
-      - -config.file=/etc/promtail/promtail.yaml
-      env:
-      - name: HOSTNAME
-        valueFrom:
-          fieldRef:
-            apiVersion: v1
-            fieldPath: spec.nodeName
-      image: docker.io/grafana/promtail:3.5.1
-      imagePullPolicy: IfNotPresent
-      name: promtail
-      ports:
-      - containerPort: 3101
-        name: http-metrics
-        protocol: TCP
-      readinessProbe:
-        failureThreshold: 5
-        httpGet:
-          path: /ready
-          port: http-metrics
-          scheme: HTTP
-        initialDelaySeconds: 10
-        periodSeconds: 10
-        successThreshold: 1
-        timeoutSeconds: 1
-      resources: {}
-      securityContext:
-        allowPrivilegeEscalation: false
-        capabilities:
-          drop:
-          - ALL
-        readOnlyRootFilesystem: true
-      terminationMessagePath: /dev/termination-log
-      terminationMessagePolicy: File
-      volumeMounts:
-      - mountPath: /etc/promtail
-        name: config
-      - mountPath: /run/promtail
-        name: run
-      - mountPath: /var/lib/docker/containers
-        name: containers
-        readOnly: true
-      - mountPath: /var/log/pods
-        name: pods
-        readOnly: true
-      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-        name: kube-api-access-mwgqb
-        readOnly: true
-    dnsPolicy: ClusterFirst
-    enableServiceLinks: true
-    nodeName: k8s
-    preemptionPolicy: PreemptLowerPriority
-    priority: 0
-    restartPolicy: Always
-    schedulerName: default-scheduler
-    securityContext:
-      runAsGroup: 0
-      runAsUser: 0
-    serviceAccount: loki-promtail
-    serviceAccountName: loki-promtail
-    terminationGracePeriodSeconds: 30
-    tolerations:
-    - effect: NoSchedule
-      key: node-role.kubernetes.io/master
-      operator: Exists
-    - effect: NoSchedule
-      key: node-role.kubernetes.io/control-plane
-      operator: Exists
-    - effect: NoExecute
-      key: node.kubernetes.io/not-ready
-      operator: Exists
-    - effect: NoExecute
-      key: node.kubernetes.io/unreachable
-      operator: Exists
-    - effect: NoSchedule
-      key: node.kubernetes.io/disk-pressure
-      operator: Exists
-    - effect: NoSchedule
-      key: node.kubernetes.io/memory-pressure
-      operator: Exists
-    - effect: NoSchedule
-      key: node.kubernetes.io/pid-pressure
-      operator: Exists
-    - effect: NoSchedule
-      key: node.kubernetes.io/unschedulable
-      operator: Exists
-    volumes:
-    - name: config
-      secret:
-        defaultMode: 420
-        secretName: loki-promtail
-    - hostPath:
-        path: /run/promtail
-        type: ""
-      name: run
-    - hostPath:
-        path: /var/lib/docker/containers
-        type: ""
-      name: containers
-    - hostPath:
-        path: /var/log/pods
-        type: ""
-      name: pods
-    - name: kube-api-access-mwgqb
-      projected:
-        defaultMode: 420
-        sources:
-        - serviceAccountToken:
-            expirationSeconds: 3607
-            path: token
-        - configMap:
-            items:
-            - key: ca.crt
-              path: ca.crt
-            name: kube-root-ca.crt
-        - downwardAPI:
-            items:
-            - fieldRef:
-                apiVersion: v1
-                fieldPath: metadata.namespace
-              path: namespace
-  status:
-    conditions:
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-21T13:34:16Z"
-      status: "True"
-      type: PodReadyToStartContainers
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-19T12:35:56Z"
-      status: "True"
-      type: Initialized
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-21T13:34:28Z"
-      status: "True"
-      type: Ready
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-21T13:34:28Z"
-      status: "True"
-      type: ContainersReady
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-19T12:35:56Z"
-      status: "True"
-      type: PodScheduled
-    containerStatuses:
-    - containerID: containerd://615db90cc486ecc9f0b0cb928425bf9883f49a386e8e27243a97c2fe7da78eb0
-      image: docker.io/grafana/promtail:3.5.1
-      imageID: docker.io/grafana/promtail@sha256:65bfae480b572854180c78f7dc567a4ad2ba548b0c410e696baa1e0fa6381299
-      lastState:
-        terminated:
-          containerID: containerd://4fdd8281aeb5950643cf8e1182d1eceec62cbd998af3a696235da3a6c16f7d70
-          exitCode: 255
-          finishedAt: "2026-04-21T13:33:33Z"
-          reason: Unknown
-          startedAt: "2026-04-20T12:18:07Z"
-      name: promtail
-      ready: true
-      restartCount: 2
-      started: true
-      state:
-        running:
-          startedAt: "2026-04-21T13:34:16Z"
-    hostIP: 192.168.1.10
-    hostIPs:
-    - ip: 192.168.1.10
-    phase: Running
-    podIP: 10.244.1.172
-    podIPs:
-    - ip: 10.244.1.172
-    qosClass: BestEffort
-    startTime: "2026-04-19T12:35:56Z"
-- apiVersion: v1
-  kind: Pod
-  metadata:
-    annotations:
-      checksum/config: 0f49fcd7a8fab642f9644e0a4d67b9f2bf9ce3e2cbf1f2ebfa7a301dbd59a7e0
-    creationTimestamp: "2026-04-19T12:35:56Z"
-    generateName: loki-promtail-
-    labels:
-      app.kubernetes.io/instance: loki
-      app.kubernetes.io/name: promtail
-      controller-revision-hash: 65d98c5466
-      pod-template-generation: "1"
-    name: loki-promtail-t9pbh
-    namespace: loki
-    ownerReferences:
-    - apiVersion: apps/v1
-      blockOwnerDeletion: true
-      controller: true
-      kind: DaemonSet
-      name: loki-promtail
-      uid: 807b44f6-d89e-4f06-a701-4b379f7f5099
-    resourceVersion: "1446529"
-    uid: 87a081f9-0d9c-45c8-b6ee-b0cefc75b059
-  spec:
-    affinity:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-          - matchFields:
-            - key: metadata.name
-              operator: In
-              values:
-              - k8s3
-    automountServiceAccountToken: true
-    containers:
-    - args:
-      - -config.file=/etc/promtail/promtail.yaml
-      env:
-      - name: HOSTNAME
-        valueFrom:
-          fieldRef:
-            apiVersion: v1
-            fieldPath: spec.nodeName
-      image: docker.io/grafana/promtail:3.5.1
-      imagePullPolicy: IfNotPresent
-      name: promtail
-      ports:
-      - containerPort: 3101
-        name: http-metrics
-        protocol: TCP
-      readinessProbe:
-        failureThreshold: 5
-        httpGet:
-          path: /ready
-          port: http-metrics
-          scheme: HTTP
-        initialDelaySeconds: 10
-        periodSeconds: 10
-        successThreshold: 1
-        timeoutSeconds: 1
-      resources: {}
-      securityContext:
-        allowPrivilegeEscalation: false
-        capabilities:
-          drop:
-          - ALL
-        readOnlyRootFilesystem: true
-      terminationMessagePath: /dev/termination-log
-      terminationMessagePolicy: File
-      volumeMounts:
-      - mountPath: /etc/promtail
-        name: config
-      - mountPath: /run/promtail
-        name: run
-      - mountPath: /var/lib/docker/containers
-        name: containers
-        readOnly: true
-      - mountPath: /var/log/pods
-        name: pods
-        readOnly: true
-      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-        name: kube-api-access-c6xlb
-        readOnly: true
-    dnsPolicy: ClusterFirst
-    enableServiceLinks: true
-    nodeName: k8s3
-    preemptionPolicy: PreemptLowerPriority
-    priority: 0
-    restartPolicy: Always
-    schedulerName: default-scheduler
-    securityContext:
-      runAsGroup: 0
-      runAsUser: 0
-    serviceAccount: loki-promtail
-    serviceAccountName: loki-promtail
-    terminationGracePeriodSeconds: 30
-    tolerations:
-    - effect: NoSchedule
-      key: node-role.kubernetes.io/master
-      operator: Exists
-    - effect: NoSchedule
-      key: node-role.kubernetes.io/control-plane
-      operator: Exists
-    - effect: NoExecute
-      key: node.kubernetes.io/not-ready
-      operator: Exists
-    - effect: NoExecute
-      key: node.kubernetes.io/unreachable
-      operator: Exists
-    - effect: NoSchedule
-      key: node.kubernetes.io/disk-pressure
-      operator: Exists
-    - effect: NoSchedule
-      key: node.kubernetes.io/memory-pressure
-      operator: Exists
-    - effect: NoSchedule
-      key: node.kubernetes.io/pid-pressure
-      operator: Exists
-    - effect: NoSchedule
-      key: node.kubernetes.io/unschedulable
-      operator: Exists
-    volumes:
-    - name: config
-      secret:
-        defaultMode: 420
-        secretName: loki-promtail
-    - hostPath:
-        path: /run/promtail
-        type: ""
-      name: run
-    - hostPath:
-        path: /var/lib/docker/containers
-        type: ""
-      name: containers
-    - hostPath:
-        path: /var/log/pods
-        type: ""
-      name: pods
-    - name: kube-api-access-c6xlb
-      projected:
-        defaultMode: 420
-        sources:
-        - serviceAccountToken:
-            expirationSeconds: 3607
-            path: token
-        - configMap:
-            items:
-            - key: ca.crt
-              path: ca.crt
-            name: kube-root-ca.crt
-        - downwardAPI:
-            items:
-            - fieldRef:
-                apiVersion: v1
-                fieldPath: metadata.namespace
-              path: namespace
-  status:
-    conditions:
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-21T13:36:30Z"
-      status: "True"
-      type: PodReadyToStartContainers
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-19T12:35:56Z"
-      status: "True"
-      type: Initialized
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-21T13:43:03Z"
-      status: "True"
-      type: Ready
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-21T13:43:03Z"
-      status: "True"
-      type: ContainersReady
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-19T12:35:56Z"
-      status: "True"
-      type: PodScheduled
-    containerStatuses:
-    - containerID: containerd://921feb3a756b62589ed208dcaa4aba49128930bc5d529a2f0cb6a1ae06b4e083
-      image: docker.io/grafana/promtail:3.5.1
-      imageID: docker.io/grafana/promtail@sha256:65bfae480b572854180c78f7dc567a4ad2ba548b0c410e696baa1e0fa6381299
-      lastState:
-        terminated:
-          containerID: containerd://24a1a7933b27b9e42e26b926cf1aff5c242a562cff18f6fdeaee4d51f1283f1f
-          exitCode: 255
-          finishedAt: "2026-04-21T13:34:24Z"
-          reason: Unknown
-          startedAt: "2026-04-20T12:20:44Z"
-      name: promtail
-      ready: true
-      restartCount: 2
-      started: true
-      state:
-        running:
-          startedAt: "2026-04-21T13:36:29Z"
-    hostIP: 192.168.1.32
-    hostIPs:
-    - ip: 192.168.1.32
-    phase: Running
-    podIP: 10.244.3.3
-    podIPs:
-    - ip: 10.244.3.3
-    qosClass: BestEffort
-    startTime: "2026-04-19T12:35:56Z"
-- apiVersion: v1
-  kind: Pod
-  metadata:
-    annotations:
-      checksum/config: 0f49fcd7a8fab642f9644e0a4d67b9f2bf9ce3e2cbf1f2ebfa7a301dbd59a7e0
-    creationTimestamp: "2026-04-19T12:35:56Z"
-    generateName: loki-promtail-
-    labels:
-      app.kubernetes.io/instance: loki
-      app.kubernetes.io/name: promtail
-      controller-revision-hash: 65d98c5466
-      pod-template-generation: "1"
-    name: loki-promtail-zcctd
-    namespace: loki
-    ownerReferences:
-    - apiVersion: apps/v1
-      blockOwnerDeletion: true
-      controller: true
-      kind: DaemonSet
-      name: loki-promtail
-      uid: 807b44f6-d89e-4f06-a701-4b379f7f5099
-    resourceVersion: "1443018"
-    uid: f16d08a0-c388-407e-9d8e-5fbaa6f63e19
-  spec:
-    affinity:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-          - matchFields:
-            - key: metadata.name
-              operator: In
-              values:
-              - k8s-master
-    automountServiceAccountToken: true
-    containers:
-    - args:
-      - -config.file=/etc/promtail/promtail.yaml
-      env:
-      - name: HOSTNAME
-        valueFrom:
-          fieldRef:
-            apiVersion: v1
-            fieldPath: spec.nodeName
-      image: docker.io/grafana/promtail:3.5.1
-      imagePullPolicy: IfNotPresent
-      name: promtail
-      ports:
-      - containerPort: 3101
-        name: http-metrics
-        protocol: TCP
-      readinessProbe:
-        failureThreshold: 5
-        httpGet:
-          path: /ready
-          port: http-metrics
-          scheme: HTTP
-        initialDelaySeconds: 10
-        periodSeconds: 10
-        successThreshold: 1
-        timeoutSeconds: 1
-      resources: {}
-      securityContext:
-        allowPrivilegeEscalation: false
-        capabilities:
-          drop:
-          - ALL
-        readOnlyRootFilesystem: true
-      terminationMessagePath: /dev/termination-log
-      terminationMessagePolicy: File
-      volumeMounts:
-      - mountPath: /etc/promtail
-        name: config
-      - mountPath: /run/promtail
-        name: run
-      - mountPath: /var/lib/docker/containers
-        name: containers
-        readOnly: true
-      - mountPath: /var/log/pods
-        name: pods
-        readOnly: true
-      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-        name: kube-api-access-p57wt
-        readOnly: true
-    dnsPolicy: ClusterFirst
-    enableServiceLinks: true
-    nodeName: k8s-master
-    preemptionPolicy: PreemptLowerPriority
-    priority: 0
-    restartPolicy: Always
-    schedulerName: default-scheduler
-    securityContext:
-      runAsGroup: 0
-      runAsUser: 0
-    serviceAccount: loki-promtail
-    serviceAccountName: loki-promtail
-    terminationGracePeriodSeconds: 30
-    tolerations:
-    - effect: NoSchedule
-      key: node-role.kubernetes.io/master
-      operator: Exists
-    - effect: NoSchedule
-      key: node-role.kubernetes.io/control-plane
-      operator: Exists
-    - effect: NoExecute
-      key: node.kubernetes.io/not-ready
-      operator: Exists
-    - effect: NoExecute
-      key: node.kubernetes.io/unreachable
-      operator: Exists
-    - effect: NoSchedule
-      key: node.kubernetes.io/disk-pressure
-      operator: Exists
-    - effect: NoSchedule
-      key: node.kubernetes.io/memory-pressure
-      operator: Exists
-    - effect: NoSchedule
-      key: node.kubernetes.io/pid-pressure
-      operator: Exists
-    - effect: NoSchedule
-      key: node.kubernetes.io/unschedulable
-      operator: Exists
-    volumes:
-    - name: config
-      secret:
-        defaultMode: 420
-        secretName: loki-promtail
-    - hostPath:
-        path: /run/promtail
-        type: ""
-      name: run
-    - hostPath:
-        path: /var/lib/docker/containers
-        type: ""
-      name: containers
-    - hostPath:
-        path: /var/log/pods
-        type: ""
-      name: pods
-    - name: kube-api-access-p57wt
-      projected:
-        defaultMode: 420
-        sources:
-        - serviceAccountToken:
-            expirationSeconds: 3607
-            path: token
-        - configMap:
-            items:
-            - key: ca.crt
-              path: ca.crt
-            name: kube-root-ca.crt
-        - downwardAPI:
-            items:
-            - fieldRef:
-                apiVersion: v1
-                fieldPath: metadata.namespace
-              path: namespace
-  status:
-    conditions:
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-21T13:33:34Z"
-      status: "True"
-      type: PodReadyToStartContainers
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-19T12:35:56Z"
-      status: "True"
-      type: Initialized
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-21T13:33:53Z"
-      status: "True"
-      type: Ready
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-21T13:33:53Z"
-      status: "True"
-      type: ContainersReady
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-19T12:35:56Z"
-      status: "True"
-      type: PodScheduled
-    containerStatuses:
-    - containerID: containerd://306f7f8075024ba40667c9157477946223d1069f1b492b71bca2c6ca7f4c7af9
-      image: docker.io/grafana/promtail:3.5.1
-      imageID: docker.io/grafana/promtail@sha256:65bfae480b572854180c78f7dc567a4ad2ba548b0c410e696baa1e0fa6381299
-      lastState:
-        terminated:
-          containerID: containerd://0232a37bafb6fc98851eb20424e9b3d5f98de1922eb7a2ed8c4e94113826304e
-          exitCode: 255
-          finishedAt: "2026-04-21T13:33:13Z"
-          reason: Unknown
-          startedAt: "2026-04-20T12:17:37Z"
-      name: promtail
-      ready: true
-      restartCount: 2
-      started: true
-      state:
-        running:
-          startedAt: "2026-04-21T13:33:34Z"
-    hostIP: 192.168.1.13
-    hostIPs:
-    - ip: 192.168.1.13
-    phase: Running
-    podIP: 10.244.0.85
-    podIPs:
-    - ip: 10.244.0.85
-    qosClass: BestEffort
-    startTime: "2026-04-19T12:35:56Z"
-- apiVersion: v1
   kind: Service
   metadata:
     annotations:
       meta.helm.sh/release-name: loki
       meta.helm.sh/release-namespace: loki
-    creationTimestamp: "2026-04-19T12:35:56Z"
     labels:
       app: loki
       app.kubernetes.io/managed-by: Helm
@@ -979,8 +14,6 @@ items:
       release: loki
     name: loki
     namespace: loki
-    resourceVersion: "1222407"
-    uid: bccef4c0-9411-4213-86bb-54d7c92ce62b
   spec:
     clusterIP: 10.105.46.108
     clusterIPs:
@@ -999,15 +32,12 @@ items:
       release: loki
     sessionAffinity: None
     type: ClusterIP
-  status:
-    loadBalancer: {}
 - apiVersion: v1
   kind: Service
   metadata:
     annotations:
       meta.helm.sh/release-name: loki
       meta.helm.sh/release-namespace: loki
-    creationTimestamp: "2026-04-19T12:35:56Z"
     labels:
       app: loki
       app.kubernetes.io/managed-by: Helm
@@ -1017,8 +47,6 @@ items:
       variant: headless
     name: loki-headless
     namespace: loki
-    resourceVersion: "1222402"
-    uid: 754818ef-99ae-4d2a-a843-a58fa2d5eee6
   spec:
     clusterIP: None
     clusterIPs:
@@ -1037,15 +65,12 @@ items:
       release: loki
     sessionAffinity: None
     type: ClusterIP
-  status:
-    loadBalancer: {}
 - apiVersion: v1
   kind: Service
   metadata:
     annotations:
       meta.helm.sh/release-name: loki
       meta.helm.sh/release-namespace: loki
-    creationTimestamp: "2026-04-19T12:35:56Z"
     labels:
       app: loki
       app.kubernetes.io/managed-by: Helm
@@ -1054,8 +79,6 @@ items:
       release: loki
     name: loki-memberlist
     namespace: loki
-    resourceVersion: "1222403"
-    uid: b51280bf-003d-449c-8861-28253e5964c6
   spec:
     clusterIP: None
     clusterIPs:
@@ -1075,16 +98,13 @@ items:
       release: loki
     sessionAffinity: None
     type: ClusterIP
-  status:
-    loadBalancer: {}
 - apiVersion: apps/v1
   kind: DaemonSet
   metadata:
     annotations:
-      deprecated.daemonset.template.generation: "1"
+      deprecated.daemonset.template.generation: '1'
       meta.helm.sh/release-name: loki
       meta.helm.sh/release-namespace: loki
-    creationTimestamp: "2026-04-19T12:35:56Z"
     generation: 1
     labels:
       app.kubernetes.io/instance: loki
@@ -1094,8 +114,6 @@ items:
       helm.sh/chart: promtail-6.17.0
     name: loki-promtail
     namespace: loki
-    resourceVersion: "1446530"
-    uid: 807b44f6-d89e-4f06-a701-4b379f7f5099
   spec:
     revisionHistoryLimit: 10
     selector:
@@ -1182,36 +200,27 @@ items:
             secretName: loki-promtail
         - hostPath:
             path: /run/promtail
-            type: ""
+            type: ''
           name: run
         - hostPath:
             path: /var/lib/docker/containers
-            type: ""
+            type: ''
           name: containers
         - hostPath:
             path: /var/log/pods
-            type: ""
+            type: ''
           name: pods
     updateStrategy:
       rollingUpdate:
         maxSurge: 0
         maxUnavailable: 1
       type: RollingUpdate
-  status:
-    currentNumberScheduled: 4
-    desiredNumberScheduled: 4
-    numberAvailable: 4
-    numberMisscheduled: 0
-    numberReady: 4
-    observedGeneration: 1
-    updatedNumberScheduled: 4
 - apiVersion: apps/v1
   kind: StatefulSet
   metadata:
     annotations:
       meta.helm.sh/release-name: loki
       meta.helm.sh/release-namespace: loki
-    creationTimestamp: "2026-04-19T12:35:56Z"
     generation: 1
     labels:
       app: loki
@@ -1221,8 +230,6 @@ items:
       release: loki
     name: loki
     namespace: loki
-    resourceVersion: "1222441"
-    uid: e7e4e6ce-137b-432e-b0a3-b1f7aeca60ab
   spec:
     persistentVolumeClaimRetentionPolicy:
       whenDeleted: Retain
@@ -1240,7 +247,7 @@ items:
         annotations:
           checksum/config: f7c516d64b976f04d4c31a243b6c2091ced173f942f6315d3ee2ba37ca7c0bd9
           prometheus.io/port: http-metrics
-          prometheus.io/scrape: "true"
+          prometheus.io/scrape: 'true'
         creationTimestamp: null
         labels:
           app: loki
@@ -1331,15 +338,6 @@ items:
         volumeMode: Filesystem
       status:
         phase: Pending
-  status:
-    availableReplicas: 0
-    collisionCount: 0
-    currentReplicas: 1
-    currentRevision: loki-9cfdd959f
-    observedGeneration: 1
-    replicas: 1
-    updateRevision: loki-9cfdd959f
-    updatedReplicas: 1
 kind: List
 metadata:
-  resourceVersion: ""
+  resourceVersion: ''

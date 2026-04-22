@@ -1,146 +1,12 @@
 apiVersion: v1
 items:
 - apiVersion: v1
-  kind: Pod
-  metadata:
-    creationTimestamp: "2026-04-18T20:51:08Z"
-    generateName: jellyseerr-5bbcc4b79d-
-    labels:
-      app: jellyseerr
-      pod-template-hash: 5bbcc4b79d
-    name: jellyseerr-5bbcc4b79d-qrr7q
-    namespace: jellyseerr
-    ownerReferences:
-    - apiVersion: apps/v1
-      blockOwnerDeletion: true
-      controller: true
-      kind: ReplicaSet
-      name: jellyseerr-5bbcc4b79d
-      uid: 29544e62-565e-44dc-a424-5c4d4059ccd1
-    resourceVersion: "1443665"
-    uid: 7dd32a21-53f1-4217-8283-e716bc82f3b5
-  spec:
-    containers:
-    - env:
-      - name: TZ
-        value: UTC
-      image: fallenbagel/jellyseerr:latest
-      imagePullPolicy: Always
-      name: jellyseerr
-      ports:
-      - containerPort: 5055
-        protocol: TCP
-      resources: {}
-      terminationMessagePath: /dev/termination-log
-      terminationMessagePolicy: File
-      volumeMounts:
-      - mountPath: /app/config
-        name: config
-      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-        name: kube-api-access-rp64h
-        readOnly: true
-    dnsPolicy: ClusterFirst
-    enableServiceLinks: true
-    nodeName: k8s
-    preemptionPolicy: PreemptLowerPriority
-    priority: 0
-    restartPolicy: Always
-    schedulerName: default-scheduler
-    securityContext: {}
-    serviceAccount: default
-    serviceAccountName: default
-    terminationGracePeriodSeconds: 30
-    tolerations:
-    - effect: NoExecute
-      key: node.kubernetes.io/not-ready
-      operator: Exists
-      tolerationSeconds: 300
-    - effect: NoExecute
-      key: node.kubernetes.io/unreachable
-      operator: Exists
-      tolerationSeconds: 300
-    volumes:
-    - emptyDir: {}
-      name: config
-    - name: kube-api-access-rp64h
-      projected:
-        defaultMode: 420
-        sources:
-        - serviceAccountToken:
-            expirationSeconds: 3607
-            path: token
-        - configMap:
-            items:
-            - key: ca.crt
-              path: ca.crt
-            name: kube-root-ca.crt
-        - downwardAPI:
-            items:
-            - fieldRef:
-                apiVersion: v1
-                fieldPath: metadata.namespace
-              path: namespace
-  status:
-    conditions:
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-21T13:34:17Z"
-      status: "True"
-      type: PodReadyToStartContainers
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-19T09:33:21Z"
-      status: "True"
-      type: Initialized
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-21T13:34:17Z"
-      status: "True"
-      type: Ready
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-21T13:34:17Z"
-      status: "True"
-      type: ContainersReady
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-19T09:33:21Z"
-      status: "True"
-      type: PodScheduled
-    containerStatuses:
-    - containerID: containerd://b029f9bd4bfb025d6d21c5493d5d3db750a0e55e1027afdcde76028e49fd3375
-      image: docker.io/fallenbagel/jellyseerr:latest
-      imageID: docker.io/fallenbagel/jellyseerr@sha256:4538137bc5af902dece165f2bf73776d9cf4eafb6dd714670724af8f3eb77764
-      lastState:
-        terminated:
-          containerID: containerd://417557a98736b2e8ecfbb73397d11d336715c2d94097dbc1f29aea4fb9da1c83
-          exitCode: 255
-          finishedAt: "2026-04-21T13:33:33Z"
-          reason: Unknown
-          startedAt: "2026-04-20T12:18:06Z"
-      name: jellyseerr
-      ready: true
-      restartCount: 2
-      started: true
-      state:
-        running:
-          startedAt: "2026-04-21T13:34:17Z"
-    hostIP: 192.168.1.10
-    hostIPs:
-    - ip: 192.168.1.10
-    phase: Running
-    podIP: 10.244.1.173
-    podIPs:
-    - ip: 10.244.1.173
-    qosClass: BestEffort
-    startTime: "2026-04-19T09:33:21Z"
-- apiVersion: v1
   kind: Service
   metadata:
     annotations:
-      kubectl.kubernetes.io/last-applied-configuration: |
-        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"jellyseerr","namespace":"jellyseerr"},"spec":{"ports":[{"port":5055,"targetPort":5055}],"selector":{"app":"jellyseerr"},"type":"LoadBalancer"}}
       metallb.io/ip-allocated-from-pool: first-pool
-    creationTimestamp: "2026-04-18T19:42:54Z"
     name: jellyseerr
     namespace: jellyseerr
-    resourceVersion: "1170864"
-    uid: 23f72ed7-9225-49a0-985d-d7994c0a0fca
   spec:
     allocateLoadBalancerNodePorts: true
     clusterIP: 10.111.190.121
@@ -160,25 +26,15 @@ items:
       app: jellyseerr
     sessionAffinity: None
     type: LoadBalancer
-  status:
-    loadBalancer:
-      ingress:
-      - ip: 192.168.1.204
 - apiVersion: apps/v1
   kind: Deployment
   metadata:
-    annotations:
-      deployment.kubernetes.io/revision: "1"
-      kubectl.kubernetes.io/last-applied-configuration: |
-        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"jellyseerr"},"name":"jellyseerr","namespace":"jellyseerr"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"jellyseerr"}},"template":{"metadata":{"labels":{"app":"jellyseerr"}},"spec":{"containers":[{"env":[{"name":"TZ","value":"UTC"}],"image":"fallenbagel/jellyseerr:latest","name":"jellyseerr","ports":[{"containerPort":5055}],"volumeMounts":[{"mountPath":"/app/config","name":"config"}]}],"volumes":[{"emptyDir":{},"name":"config"}]}}}}
-    creationTimestamp: "2026-04-18T19:42:54Z"
+    annotations: {}
     generation: 1
     labels:
       app: jellyseerr
     name: jellyseerr
     namespace: jellyseerr
-    resourceVersion: "1443670"
-    uid: b06378fa-ed2e-4857-97d6-d0b374d56c5f
   spec:
     progressDeadlineSeconds: 600
     replicas: 1
@@ -221,91 +77,6 @@ items:
         volumes:
         - emptyDir: {}
           name: config
-  status:
-    availableReplicas: 1
-    conditions:
-    - lastTransitionTime: "2026-04-18T19:42:54Z"
-      lastUpdateTime: "2026-04-18T19:43:34Z"
-      message: ReplicaSet "jellyseerr-5bbcc4b79d" has successfully progressed.
-      reason: NewReplicaSetAvailable
-      status: "True"
-      type: Progressing
-    - lastTransitionTime: "2026-04-21T13:34:17Z"
-      lastUpdateTime: "2026-04-21T13:34:17Z"
-      message: Deployment has minimum availability.
-      reason: MinimumReplicasAvailable
-      status: "True"
-      type: Available
-    observedGeneration: 1
-    readyReplicas: 1
-    replicas: 1
-    updatedReplicas: 1
-- apiVersion: apps/v1
-  kind: ReplicaSet
-  metadata:
-    annotations:
-      deployment.kubernetes.io/desired-replicas: "1"
-      deployment.kubernetes.io/max-replicas: "2"
-      deployment.kubernetes.io/revision: "1"
-    creationTimestamp: "2026-04-18T19:42:54Z"
-    generation: 1
-    labels:
-      app: jellyseerr
-      pod-template-hash: 5bbcc4b79d
-    name: jellyseerr-5bbcc4b79d
-    namespace: jellyseerr
-    ownerReferences:
-    - apiVersion: apps/v1
-      blockOwnerDeletion: true
-      controller: true
-      kind: Deployment
-      name: jellyseerr
-      uid: b06378fa-ed2e-4857-97d6-d0b374d56c5f
-    resourceVersion: "1443668"
-    uid: 29544e62-565e-44dc-a424-5c4d4059ccd1
-  spec:
-    replicas: 1
-    selector:
-      matchLabels:
-        app: jellyseerr
-        pod-template-hash: 5bbcc4b79d
-    template:
-      metadata:
-        creationTimestamp: null
-        labels:
-          app: jellyseerr
-          pod-template-hash: 5bbcc4b79d
-      spec:
-        containers:
-        - env:
-          - name: TZ
-            value: UTC
-          image: fallenbagel/jellyseerr:latest
-          imagePullPolicy: Always
-          name: jellyseerr
-          ports:
-          - containerPort: 5055
-            protocol: TCP
-          resources: {}
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
-          volumeMounts:
-          - mountPath: /app/config
-            name: config
-        dnsPolicy: ClusterFirst
-        restartPolicy: Always
-        schedulerName: default-scheduler
-        securityContext: {}
-        terminationGracePeriodSeconds: 30
-        volumes:
-        - emptyDir: {}
-          name: config
-  status:
-    availableReplicas: 1
-    fullyLabeledReplicas: 1
-    observedGeneration: 1
-    readyReplicas: 1
-    replicas: 1
 kind: List
 metadata:
-  resourceVersion: ""
+  resourceVersion: ''

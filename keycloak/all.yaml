@@ -1,548 +1,11 @@
 apiVersion: v1
 items:
 - apiVersion: v1
-  kind: Pod
-  metadata:
-    annotations:
-      checksum/configmap-env-vars: ca164000f9e47348dc0ecc56e007429d6e145164ec75cc07baf41535ac63070c
-      checksum/secrets: 5ecd957c2e4750e1721e190b26d713d9471dc976d100dbce41d035f0dbc445e8
-    creationTimestamp: "2026-04-18T20:52:19Z"
-    generateName: keycloak-
-    labels:
-      app.kubernetes.io/component: keycloak
-      app.kubernetes.io/instance: keycloak
-      app.kubernetes.io/managed-by: Helm
-      app.kubernetes.io/name: keycloak
-      app.kubernetes.io/part-of: keycloak
-      app.kubernetes.io/version: 26.3.3
-      apps.kubernetes.io/pod-index: "0"
-      controller-revision-hash: keycloak-777cd69954
-      helm.sh/chart: keycloak-25.2.0
-      statefulset.kubernetes.io/pod-name: keycloak-0
-    name: keycloak-0
-    namespace: keycloak
-    ownerReferences:
-    - apiVersion: apps/v1
-      blockOwnerDeletion: true
-      controller: true
-      kind: StatefulSet
-      name: keycloak
-      uid: 04ed7a63-f78f-4c35-9ea7-837009e9d819
-    resourceVersion: "1444549"
-    uid: 719cbc70-8a9d-4257-a377-cd543b264de8
-  spec:
-    affinity:
-      podAntiAffinity:
-        preferredDuringSchedulingIgnoredDuringExecution:
-        - podAffinityTerm:
-            labelSelector:
-              matchLabels:
-                app.kubernetes.io/component: keycloak
-                app.kubernetes.io/instance: keycloak
-                app.kubernetes.io/name: keycloak
-            topologyKey: kubernetes.io/hostname
-          weight: 1
-    automountServiceAccountToken: true
-    containers:
-    - env:
-      - name: KUBERNETES_NAMESPACE
-        valueFrom:
-          fieldRef:
-            apiVersion: v1
-            fieldPath: metadata.namespace
-      envFrom:
-      - configMapRef:
-          name: keycloak-env-vars
-      image: docker.io/bitnamilegacy/keycloak:26.3.3-debian-12-r0
-      imagePullPolicy: IfNotPresent
-      livenessProbe:
-        failureThreshold: 3
-        initialDelaySeconds: 120
-        periodSeconds: 1
-        successThreshold: 1
-        tcpSocket:
-          port: http
-        timeoutSeconds: 5
-      name: keycloak
-      ports:
-      - containerPort: 8080
-        name: http
-        protocol: TCP
-      - containerPort: 9000
-        name: management
-        protocol: TCP
-      - containerPort: 7800
-        name: discovery
-        protocol: TCP
-      readinessProbe:
-        failureThreshold: 3
-        httpGet:
-          path: /realms/master
-          port: http
-          scheme: HTTP
-        initialDelaySeconds: 30
-        periodSeconds: 10
-        successThreshold: 1
-        timeoutSeconds: 1
-      resources:
-        limits:
-          cpu: 750m
-          ephemeral-storage: 2Gi
-          memory: 768Mi
-        requests:
-          cpu: 500m
-          ephemeral-storage: 50Mi
-          memory: 512Mi
-      securityContext:
-        allowPrivilegeEscalation: false
-        capabilities:
-          drop:
-          - ALL
-        privileged: false
-        readOnlyRootFilesystem: true
-        runAsGroup: 1001
-        runAsNonRoot: true
-        runAsUser: 1001
-        seLinuxOptions: {}
-        seccompProfile:
-          type: RuntimeDefault
-      terminationMessagePath: /dev/termination-log
-      terminationMessagePolicy: File
-      volumeMounts:
-      - mountPath: /tmp
-        name: empty-dir
-        subPath: tmp-dir
-      - mountPath: /bitnami/keycloak
-        name: empty-dir
-        subPath: app-volume-dir
-      - mountPath: /opt/bitnami/keycloak/conf
-        name: empty-dir
-        subPath: app-conf-dir
-      - mountPath: /opt/bitnami/keycloak/lib/quarkus
-        name: empty-dir
-        subPath: app-quarkus-dir
-      - mountPath: /opt/bitnami/keycloak/data
-        name: empty-dir
-        subPath: app-data-dir
-      - mountPath: /opt/bitnami/keycloak/providers
-        name: empty-dir
-        subPath: app-providers-dir
-      - mountPath: /opt/bitnami/keycloak/themes
-        name: empty-dir
-        subPath: app-themes-dir
-      - mountPath: /opt/bitnami/keycloak/secrets
-        name: keycloak-secrets
-      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-        name: kube-api-access-jbhbd
-        readOnly: true
-    dnsPolicy: ClusterFirst
-    enableServiceLinks: true
-    hostname: keycloak-0
-    initContainers:
-    - args:
-      - -ec
-      - |
-        . /opt/bitnami/scripts/liblog.sh
-
-        info "Copying writable dirs to empty dir"
-        # In order to not break the application functionality we need to make some
-        # directories writable, so we need to copy it to an empty dir volume
-        cp -r --preserve=mode,timestamps /opt/bitnami/keycloak/lib/quarkus /emptydir/app-quarkus-dir
-        cp -r --preserve=mode,timestamps /opt/bitnami/keycloak/data /emptydir/app-data-dir
-        cp -r --preserve=mode,timestamps /opt/bitnami/keycloak/providers /emptydir/app-providers-dir
-        cp -r --preserve=mode,timestamps /opt/bitnami/keycloak/themes /emptydir/app-themes-dir
-        info "Copy operation completed"
-      command:
-      - /bin/bash
-      image: docker.io/bitnamilegacy/keycloak:26.3.3-debian-12-r0
-      imagePullPolicy: IfNotPresent
-      name: prepare-write-dirs
-      resources:
-        limits:
-          cpu: 150m
-          ephemeral-storage: 2Gi
-          memory: 192Mi
-        requests:
-          cpu: 100m
-          ephemeral-storage: 50Mi
-          memory: 128Mi
-      securityContext:
-        allowPrivilegeEscalation: false
-        capabilities:
-          drop:
-          - ALL
-        privileged: false
-        readOnlyRootFilesystem: true
-        runAsGroup: 1001
-        runAsNonRoot: true
-        runAsUser: 1001
-        seLinuxOptions: {}
-        seccompProfile:
-          type: RuntimeDefault
-      terminationMessagePath: /dev/termination-log
-      terminationMessagePolicy: File
-      volumeMounts:
-      - mountPath: /emptydir
-        name: empty-dir
-      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-        name: kube-api-access-jbhbd
-        readOnly: true
-    nodeName: k8s
-    preemptionPolicy: PreemptLowerPriority
-    priority: 0
-    restartPolicy: Always
-    schedulerName: default-scheduler
-    securityContext:
-      fsGroup: 1001
-      fsGroupChangePolicy: Always
-    serviceAccount: keycloak
-    serviceAccountName: keycloak
-    subdomain: keycloak-headless
-    terminationGracePeriodSeconds: 30
-    tolerations:
-    - effect: NoExecute
-      key: node.kubernetes.io/not-ready
-      operator: Exists
-      tolerationSeconds: 300
-    - effect: NoExecute
-      key: node.kubernetes.io/unreachable
-      operator: Exists
-      tolerationSeconds: 300
-    volumes:
-    - emptyDir: {}
-      name: empty-dir
-    - name: keycloak-secrets
-      projected:
-        defaultMode: 420
-        sources:
-        - secret:
-            name: keycloak
-        - secret:
-            items:
-            - key: password
-              path: db-password
-            name: keycloak-postgresql
-    - name: kube-api-access-jbhbd
-      projected:
-        defaultMode: 420
-        sources:
-        - serviceAccountToken:
-            expirationSeconds: 3607
-            path: token
-        - configMap:
-            items:
-            - key: ca.crt
-              path: ca.crt
-            name: kube-root-ca.crt
-        - downwardAPI:
-            items:
-            - fieldRef:
-                apiVersion: v1
-                fieldPath: metadata.namespace
-              path: namespace
-  status:
-    conditions:
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-21T13:34:18Z"
-      status: "True"
-      type: PodReadyToStartContainers
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-19T09:33:30Z"
-      status: "True"
-      type: Initialized
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-21T13:35:49Z"
-      status: "True"
-      type: Ready
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-21T13:35:49Z"
-      status: "True"
-      type: ContainersReady
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-19T09:33:21Z"
-      status: "True"
-      type: PodScheduled
-    containerStatuses:
-    - containerID: containerd://a659ea25b0da97afde591cc0259058a731fe97c732f1e8289bdef6865bc087f5
-      image: docker.io/bitnamilegacy/keycloak:26.3.3-debian-12-r0
-      imageID: docker.io/bitnamilegacy/keycloak@sha256:da3df0976a9f9a664bdbde6cb5308b78f03ac94d0abf33b2df355bbb06cbc5b9
-      lastState:
-        terminated:
-          containerID: containerd://3ac531937c4d8949dcabfaf9dd6760d7e5f4f4d2ef784be424d9cafae2ef1ee8
-          exitCode: 255
-          finishedAt: "2026-04-21T13:33:33Z"
-          reason: Unknown
-          startedAt: "2026-04-20T12:18:08Z"
-      name: keycloak
-      ready: true
-      restartCount: 3
-      started: true
-      state:
-        running:
-          startedAt: "2026-04-21T13:34:19Z"
-    hostIP: 192.168.1.10
-    hostIPs:
-    - ip: 192.168.1.10
-    initContainerStatuses:
-    - containerID: containerd://b10d142ad8d412c2a89761357557b2d7b9ebe865a8e24943f14170340db35a0e
-      image: docker.io/bitnamilegacy/keycloak:26.3.3-debian-12-r0
-      imageID: docker.io/bitnamilegacy/keycloak@sha256:da3df0976a9f9a664bdbde6cb5308b78f03ac94d0abf33b2df355bbb06cbc5b9
-      lastState: {}
-      name: prepare-write-dirs
-      ready: true
-      restartCount: 0
-      started: false
-      state:
-        terminated:
-          containerID: containerd://b10d142ad8d412c2a89761357557b2d7b9ebe865a8e24943f14170340db35a0e
-          exitCode: 0
-          finishedAt: "2026-04-21T13:34:18Z"
-          reason: Completed
-          startedAt: "2026-04-21T13:34:18Z"
-    phase: Running
-    podIP: 10.244.1.182
-    podIPs:
-    - ip: 10.244.1.182
-    qosClass: Burstable
-    startTime: "2026-04-19T09:33:21Z"
-- apiVersion: v1
-  kind: Pod
-  metadata:
-    creationTimestamp: "2026-04-18T20:50:07Z"
-    generateName: keycloak-postgresql-
-    labels:
-      app.kubernetes.io/component: primary
-      app.kubernetes.io/instance: keycloak
-      app.kubernetes.io/managed-by: Helm
-      app.kubernetes.io/name: postgresql
-      app.kubernetes.io/version: 17.6.0
-      apps.kubernetes.io/pod-index: "0"
-      controller-revision-hash: keycloak-postgresql-55c458fb55
-      helm.sh/chart: postgresql-16.7.26
-      statefulset.kubernetes.io/pod-name: keycloak-postgresql-0
-    name: keycloak-postgresql-0
-    namespace: keycloak
-    ownerReferences:
-    - apiVersion: apps/v1
-      blockOwnerDeletion: true
-      controller: true
-      kind: StatefulSet
-      name: keycloak-postgresql
-      uid: c21676b8-fdbf-4be3-baf1-135474d57a51
-    resourceVersion: "1443855"
-    uid: a29115e0-abb1-4570-b2bb-ec42e0388451
-  spec:
-    affinity:
-      podAntiAffinity:
-        preferredDuringSchedulingIgnoredDuringExecution:
-        - podAffinityTerm:
-            labelSelector:
-              matchLabels:
-                app.kubernetes.io/component: primary
-                app.kubernetes.io/instance: keycloak
-                app.kubernetes.io/name: postgresql
-            topologyKey: kubernetes.io/hostname
-          weight: 1
-    automountServiceAccountToken: false
-    containers:
-    - env:
-      - name: BITNAMI_DEBUG
-        value: "false"
-      - name: POSTGRESQL_PORT_NUMBER
-        value: "5432"
-      - name: POSTGRESQL_VOLUME_DIR
-        value: /bitnami/postgresql
-      - name: PGDATA
-        value: /bitnami/postgresql/data
-      - name: POSTGRES_USER
-        value: keycloak
-      - name: POSTGRES_PASSWORD_FILE
-        value: /opt/bitnami/postgresql/secrets/password
-      - name: POSTGRES_POSTGRES_PASSWORD_FILE
-        value: /opt/bitnami/postgresql/secrets/postgres-password
-      - name: POSTGRES_DATABASE
-        value: keycloak
-      - name: POSTGRESQL_ENABLE_LDAP
-        value: "no"
-      - name: POSTGRESQL_ENABLE_TLS
-        value: "no"
-      - name: POSTGRESQL_LOG_HOSTNAME
-        value: "false"
-      - name: POSTGRESQL_LOG_CONNECTIONS
-        value: "false"
-      - name: POSTGRESQL_LOG_DISCONNECTIONS
-        value: "false"
-      - name: POSTGRESQL_PGAUDIT_LOG_CATALOG
-        value: "off"
-      - name: POSTGRESQL_CLIENT_MIN_MESSAGES
-        value: error
-      - name: POSTGRESQL_SHARED_PRELOAD_LIBRARIES
-        value: pgaudit
-      image: docker.io/bitnamilegacy/postgresql:17.6.0-debian-12-r0
-      imagePullPolicy: IfNotPresent
-      livenessProbe:
-        exec:
-          command:
-          - /bin/sh
-          - -c
-          - exec pg_isready -U "keycloak" -d "dbname=keycloak" -h 127.0.0.1 -p 5432
-        failureThreshold: 6
-        initialDelaySeconds: 30
-        periodSeconds: 10
-        successThreshold: 1
-        timeoutSeconds: 5
-      name: postgresql
-      ports:
-      - containerPort: 5432
-        name: tcp-postgresql
-        protocol: TCP
-      readinessProbe:
-        exec:
-          command:
-          - /bin/sh
-          - -c
-          - -e
-          - |
-            exec pg_isready -U "keycloak" -d "dbname=keycloak" -h 127.0.0.1 -p 5432
-            [ -f /opt/bitnami/postgresql/tmp/.initialized ] || [ -f /bitnami/postgresql/.initialized ]
-        failureThreshold: 6
-        initialDelaySeconds: 5
-        periodSeconds: 10
-        successThreshold: 1
-        timeoutSeconds: 5
-      resources:
-        limits:
-          cpu: 150m
-          ephemeral-storage: 2Gi
-          memory: 192Mi
-        requests:
-          cpu: 100m
-          ephemeral-storage: 50Mi
-          memory: 128Mi
-      securityContext:
-        allowPrivilegeEscalation: false
-        capabilities:
-          drop:
-          - ALL
-        privileged: false
-        readOnlyRootFilesystem: true
-        runAsGroup: 1001
-        runAsNonRoot: true
-        runAsUser: 1001
-        seLinuxOptions: {}
-        seccompProfile:
-          type: RuntimeDefault
-      terminationMessagePath: /dev/termination-log
-      terminationMessagePolicy: File
-      volumeMounts:
-      - mountPath: /tmp
-        name: empty-dir
-        subPath: tmp-dir
-      - mountPath: /opt/bitnami/postgresql/conf
-        name: empty-dir
-        subPath: app-conf-dir
-      - mountPath: /opt/bitnami/postgresql/tmp
-        name: empty-dir
-        subPath: app-tmp-dir
-      - mountPath: /opt/bitnami/postgresql/secrets/
-        name: postgresql-password
-      - mountPath: /dev/shm
-        name: dshm
-      - mountPath: /bitnami/postgresql
-        name: data
-    dnsPolicy: ClusterFirst
-    enableServiceLinks: true
-    hostname: keycloak-postgresql-0
-    nodeName: k8s
-    preemptionPolicy: PreemptLowerPriority
-    priority: 0
-    restartPolicy: Always
-    schedulerName: default-scheduler
-    securityContext:
-      fsGroup: 1001
-      fsGroupChangePolicy: Always
-    serviceAccount: keycloak-postgresql
-    serviceAccountName: keycloak-postgresql
-    subdomain: keycloak-postgresql-hl
-    terminationGracePeriodSeconds: 30
-    tolerations:
-    - effect: NoExecute
-      key: node.kubernetes.io/not-ready
-      operator: Exists
-      tolerationSeconds: 300
-    - effect: NoExecute
-      key: node.kubernetes.io/unreachable
-      operator: Exists
-      tolerationSeconds: 300
-    volumes:
-    - name: data
-      persistentVolumeClaim:
-        claimName: data-keycloak-postgresql-0
-    - emptyDir: {}
-      name: empty-dir
-    - name: postgresql-password
-      secret:
-        defaultMode: 420
-        secretName: keycloak-postgresql
-    - emptyDir:
-        medium: Memory
-      name: dshm
-  status:
-    conditions:
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-21T13:34:20Z"
-      status: "True"
-      type: PodReadyToStartContainers
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-19T09:33:21Z"
-      status: "True"
-      type: Initialized
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-21T13:34:28Z"
-      status: "True"
-      type: Ready
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-21T13:34:28Z"
-      status: "True"
-      type: ContainersReady
-    - lastProbeTime: null
-      lastTransitionTime: "2026-04-19T09:33:21Z"
-      status: "True"
-      type: PodScheduled
-    containerStatuses:
-    - containerID: containerd://5004810cfb8d455873026d7272237e335e97f688ad206c08a7a971243e392f91
-      image: docker.io/bitnamilegacy/postgresql:17.6.0-debian-12-r0
-      imageID: docker.io/bitnamilegacy/postgresql@sha256:de520acd66fc954d538faa997771ca791f9fcba8b837419a8bc4d08a08df3762
-      lastState:
-        terminated:
-          containerID: containerd://c39c750dd3e3104147a0f8d8f4723c991675ff962f16aa7bab1ea25b729099d1
-          exitCode: 255
-          finishedAt: "2026-04-21T13:33:33Z"
-          reason: Unknown
-          startedAt: "2026-04-20T12:18:06Z"
-      name: postgresql
-      ready: true
-      restartCount: 2
-      started: true
-      state:
-        running:
-          startedAt: "2026-04-21T13:34:19Z"
-    hostIP: 192.168.1.10
-    hostIPs:
-    - ip: 192.168.1.10
-    phase: Running
-    podIP: 10.244.1.185
-    podIPs:
-    - ip: 10.244.1.185
-    qosClass: Burstable
-    startTime: "2026-04-19T09:33:21Z"
-- apiVersion: v1
   kind: Service
   metadata:
     annotations:
       meta.helm.sh/release-name: keycloak
       meta.helm.sh/release-namespace: keycloak
-    creationTimestamp: "2026-04-14T16:02:50Z"
     labels:
       app.kubernetes.io/component: keycloak
       app.kubernetes.io/instance: keycloak
@@ -553,8 +16,6 @@ items:
       helm.sh/chart: keycloak-25.2.0
     name: keycloak
     namespace: keycloak
-    resourceVersion: "618298"
-    uid: 1f942fb2-6c32-4ce4-82b9-083ec7e85d98
   spec:
     clusterIP: 10.100.101.116
     clusterIPs:
@@ -575,15 +36,12 @@ items:
       app.kubernetes.io/part-of: keycloak
     sessionAffinity: None
     type: ClusterIP
-  status:
-    loadBalancer: {}
 - apiVersion: v1
   kind: Service
   metadata:
     annotations:
       meta.helm.sh/release-name: keycloak
       meta.helm.sh/release-namespace: keycloak
-    creationTimestamp: "2026-04-14T16:02:50Z"
     labels:
       app.kubernetes.io/component: keycloak
       app.kubernetes.io/instance: keycloak
@@ -594,8 +52,6 @@ items:
       helm.sh/chart: keycloak-25.2.0
     name: keycloak-headless
     namespace: keycloak
-    resourceVersion: "618283"
-    uid: d5762fc6-4460-448a-bdc1-8ca2afb08050
   spec:
     clusterIP: None
     clusterIPs:
@@ -617,17 +73,14 @@ items:
       app.kubernetes.io/part-of: keycloak
     sessionAffinity: None
     type: ClusterIP
-  status:
-    loadBalancer: {}
 - apiVersion: v1
   kind: Service
   metadata:
     annotations:
       meta.helm.sh/release-name: keycloak
       meta.helm.sh/release-namespace: keycloak
-      prometheus.io/port: "9000"
-      prometheus.io/scrape: "true"
-    creationTimestamp: "2026-04-14T16:02:50Z"
+      prometheus.io/port: '9000'
+      prometheus.io/scrape: 'true'
     labels:
       app.kubernetes.io/component: metrics
       app.kubernetes.io/instance: keycloak
@@ -638,8 +91,6 @@ items:
       helm.sh/chart: keycloak-25.2.0
     name: keycloak-metrics
     namespace: keycloak
-    resourceVersion: "618294"
-    uid: 4a7ea3bd-b994-4a9c-9567-7b65adba857e
   spec:
     clusterIP: 10.110.61.110
     clusterIPs:
@@ -660,15 +111,12 @@ items:
       app.kubernetes.io/part-of: keycloak
     sessionAffinity: None
     type: ClusterIP
-  status:
-    loadBalancer: {}
 - apiVersion: v1
   kind: Service
   metadata:
     annotations:
       meta.helm.sh/release-name: keycloak
       meta.helm.sh/release-namespace: keycloak
-    creationTimestamp: "2026-04-14T16:02:50Z"
     labels:
       app.kubernetes.io/component: primary
       app.kubernetes.io/instance: keycloak
@@ -678,8 +126,6 @@ items:
       helm.sh/chart: postgresql-16.7.26
     name: keycloak-postgresql
     namespace: keycloak
-    resourceVersion: "618287"
-    uid: 2e4e94a9-33a8-476c-ac6b-aa0180193ea5
   spec:
     clusterIP: 10.97.9.110
     clusterIPs:
@@ -699,15 +145,12 @@ items:
       app.kubernetes.io/name: postgresql
     sessionAffinity: None
     type: ClusterIP
-  status:
-    loadBalancer: {}
 - apiVersion: v1
   kind: Service
   metadata:
     annotations:
       meta.helm.sh/release-name: keycloak
       meta.helm.sh/release-namespace: keycloak
-    creationTimestamp: "2026-04-14T16:02:50Z"
     labels:
       app.kubernetes.io/component: primary
       app.kubernetes.io/instance: keycloak
@@ -717,8 +160,6 @@ items:
       helm.sh/chart: postgresql-16.7.26
     name: keycloak-postgresql-hl
     namespace: keycloak
-    resourceVersion: "618282"
-    uid: 0be296e0-91ff-4176-9a43-1961552c325f
   spec:
     clusterIP: None
     clusterIPs:
@@ -739,15 +180,12 @@ items:
       app.kubernetes.io/name: postgresql
     sessionAffinity: None
     type: ClusterIP
-  status:
-    loadBalancer: {}
 - apiVersion: apps/v1
   kind: StatefulSet
   metadata:
     annotations:
       meta.helm.sh/release-name: keycloak
       meta.helm.sh/release-namespace: keycloak
-    creationTimestamp: "2026-04-14T16:02:50Z"
     generation: 1
     labels:
       app.kubernetes.io/component: keycloak
@@ -759,8 +197,6 @@ items:
       helm.sh/chart: keycloak-25.2.0
     name: keycloak
     namespace: keycloak
-    resourceVersion: "1444556"
-    uid: 04ed7a63-f78f-4c35-9ea7-837009e9d819
   spec:
     persistentVolumeClaimRetentionPolicy:
       whenDeleted: Retain
@@ -896,17 +332,27 @@ items:
         initContainers:
         - args:
           - -ec
-          - |
-            . /opt/bitnami/scripts/liblog.sh
+          - '. /opt/bitnami/scripts/liblog.sh
+
 
             info "Copying writable dirs to empty dir"
-            # In order to not break the application functionality we need to make some
+
+            # In order to not break the application functionality we need to make
+            some
+
             # directories writable, so we need to copy it to an empty dir volume
+
             cp -r --preserve=mode,timestamps /opt/bitnami/keycloak/lib/quarkus /emptydir/app-quarkus-dir
+
             cp -r --preserve=mode,timestamps /opt/bitnami/keycloak/data /emptydir/app-data-dir
+
             cp -r --preserve=mode,timestamps /opt/bitnami/keycloak/providers /emptydir/app-providers-dir
+
             cp -r --preserve=mode,timestamps /opt/bitnami/keycloak/themes /emptydir/app-themes-dir
+
             info "Copy operation completed"
+
+            '
           command:
           - /bin/bash
           image: docker.io/bitnamilegacy/keycloak:26.3.3-debian-12-r0
@@ -963,23 +409,12 @@ items:
                 name: keycloak-postgresql
     updateStrategy:
       type: RollingUpdate
-  status:
-    availableReplicas: 1
-    collisionCount: 0
-    currentReplicas: 1
-    currentRevision: keycloak-777cd69954
-    observedGeneration: 1
-    readyReplicas: 1
-    replicas: 1
-    updateRevision: keycloak-777cd69954
-    updatedReplicas: 1
 - apiVersion: apps/v1
   kind: StatefulSet
   metadata:
     annotations:
       meta.helm.sh/release-name: keycloak
       meta.helm.sh/release-namespace: keycloak
-    creationTimestamp: "2026-04-14T16:02:50Z"
     generation: 1
     labels:
       app.kubernetes.io/component: primary
@@ -990,8 +425,6 @@ items:
       helm.sh/chart: postgresql-16.7.26
     name: keycloak-postgresql
     namespace: keycloak
-    resourceVersion: "1443860"
-    uid: c21676b8-fdbf-4be3-baf1-135474d57a51
   spec:
     persistentVolumeClaimRetentionPolicy:
       whenDeleted: Retain
@@ -1032,9 +465,9 @@ items:
         containers:
         - env:
           - name: BITNAMI_DEBUG
-            value: "false"
+            value: 'false'
           - name: POSTGRESQL_PORT_NUMBER
-            value: "5432"
+            value: '5432'
           - name: POSTGRESQL_VOLUME_DIR
             value: /bitnami/postgresql
           - name: PGDATA
@@ -1048,17 +481,17 @@ items:
           - name: POSTGRES_DATABASE
             value: keycloak
           - name: POSTGRESQL_ENABLE_LDAP
-            value: "no"
+            value: 'no'
           - name: POSTGRESQL_ENABLE_TLS
-            value: "no"
+            value: 'no'
           - name: POSTGRESQL_LOG_HOSTNAME
-            value: "false"
+            value: 'false'
           - name: POSTGRESQL_LOG_CONNECTIONS
-            value: "false"
+            value: 'false'
           - name: POSTGRESQL_LOG_DISCONNECTIONS
-            value: "false"
+            value: 'false'
           - name: POSTGRESQL_PGAUDIT_LOG_CATALOG
-            value: "off"
+            value: 'off'
           - name: POSTGRESQL_CLIENT_MIN_MESSAGES
             value: error
           - name: POSTGRESQL_SHARED_PRELOAD_LIBRARIES
@@ -1088,9 +521,13 @@ items:
               - /bin/sh
               - -c
               - -e
-              - |
-                exec pg_isready -U "keycloak" -d "dbname=keycloak" -h 127.0.0.1 -p 5432
-                [ -f /opt/bitnami/postgresql/tmp/.initialized ] || [ -f /bitnami/postgresql/.initialized ]
+              - 'exec pg_isready -U "keycloak" -d "dbname=keycloak" -h 127.0.0.1 -p
+                5432
+
+                [ -f /opt/bitnami/postgresql/tmp/.initialized ] || [ -f /bitnami/postgresql/.initialized
+                ]
+
+                '
             failureThreshold: 6
             initialDelaySeconds: 5
             periodSeconds: 10
@@ -1175,16 +612,6 @@ items:
         volumeMode: Filesystem
       status:
         phase: Pending
-  status:
-    availableReplicas: 1
-    collisionCount: 0
-    currentReplicas: 1
-    currentRevision: keycloak-postgresql-55c458fb55
-    observedGeneration: 1
-    readyReplicas: 1
-    replicas: 1
-    updateRevision: keycloak-postgresql-55c458fb55
-    updatedReplicas: 1
 kind: List
 metadata:
-  resourceVersion: ""
+  resourceVersion: ''

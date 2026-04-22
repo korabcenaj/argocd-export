@@ -7,7 +7,6 @@ items:
       meta.helm.sh/release-name: nzbget
       meta.helm.sh/release-namespace: nzbget
       metallb.io/ip-allocated-from-pool: first-pool
-    creationTimestamp: "2026-04-18T19:17:50Z"
     labels:
       app.kubernetes.io/instance: nzbget
       app.kubernetes.io/managed-by: Helm
@@ -16,8 +15,6 @@ items:
       helm.sh/chart: nzbget-12.4.2
     name: nzbget
     namespace: nzbget
-    resourceVersion: "1169069"
-    uid: ea3a63f2-e69f-428c-a282-72ed0846d39f
   spec:
     allocateLoadBalancerNodePorts: true
     clusterIP: 10.108.194.146
@@ -39,18 +36,12 @@ items:
       app.kubernetes.io/name: nzbget
     sessionAffinity: None
     type: LoadBalancer
-  status:
-    loadBalancer:
-      ingress:
-      - ip: 192.168.1.202
 - apiVersion: apps/v1
   kind: Deployment
   metadata:
     annotations:
-      deployment.kubernetes.io/revision: "2"
       meta.helm.sh/release-name: nzbget
       meta.helm.sh/release-namespace: nzbget
-    creationTimestamp: "2026-04-18T19:17:50Z"
     generation: 3
     labels:
       app.kubernetes.io/instance: nzbget
@@ -60,8 +51,6 @@ items:
       helm.sh/chart: nzbget-12.4.2
     name: nzbget
     namespace: nzbget
-    resourceVersion: "1388482"
-    uid: d7c6ce70-0113-4dff-816e-1a39bfa699ef
   spec:
     progressDeadlineSeconds: 600
     replicas: 0
@@ -127,198 +116,6 @@ items:
         - name: config
           persistentVolumeClaim:
             claimName: nzbget-config-pvc
-  status:
-    conditions:
-    - lastTransitionTime: "2026-04-18T19:17:50Z"
-      lastUpdateTime: "2026-04-19T10:02:15Z"
-      message: ReplicaSet "nzbget-5bc5fddbc6" has successfully progressed.
-      reason: NewReplicaSetAvailable
-      status: "True"
-      type: Progressing
-    - lastTransitionTime: "2026-04-20T12:17:51Z"
-      lastUpdateTime: "2026-04-20T12:17:51Z"
-      message: Deployment has minimum availability.
-      reason: MinimumReplicasAvailable
-      status: "True"
-      type: Available
-    observedGeneration: 3
-- apiVersion: apps/v1
-  kind: ReplicaSet
-  metadata:
-    annotations:
-      deployment.kubernetes.io/desired-replicas: "0"
-      deployment.kubernetes.io/max-replicas: "0"
-      deployment.kubernetes.io/revision: "2"
-      meta.helm.sh/release-name: nzbget
-      meta.helm.sh/release-namespace: nzbget
-    creationTimestamp: "2026-04-19T10:02:04Z"
-    generation: 2
-    labels:
-      app.kubernetes.io/instance: nzbget
-      app.kubernetes.io/name: nzbget
-      pod-template-hash: 5bc5fddbc6
-    name: nzbget-5bc5fddbc6
-    namespace: nzbget
-    ownerReferences:
-    - apiVersion: apps/v1
-      blockOwnerDeletion: true
-      controller: true
-      kind: Deployment
-      name: nzbget
-      uid: d7c6ce70-0113-4dff-816e-1a39bfa699ef
-    resourceVersion: "1388480"
-    uid: a9781f4e-fbd9-4742-b7a3-888b235b5f15
-  spec:
-    replicas: 0
-    selector:
-      matchLabels:
-        app.kubernetes.io/instance: nzbget
-        app.kubernetes.io/name: nzbget
-        pod-template-hash: 5bc5fddbc6
-    template:
-      metadata:
-        creationTimestamp: null
-        labels:
-          app.kubernetes.io/instance: nzbget
-          app.kubernetes.io/name: nzbget
-          pod-template-hash: 5bc5fddbc6
-      spec:
-        automountServiceAccountToken: true
-        containers:
-        - image: ghcr.io/k8s-at-home/nzbget:v21.1
-          imagePullPolicy: IfNotPresent
-          livenessProbe:
-            failureThreshold: 3
-            periodSeconds: 10
-            successThreshold: 1
-            tcpSocket:
-              port: 6789
-            timeoutSeconds: 1
-          name: nzbget
-          ports:
-          - containerPort: 6789
-            name: http
-            protocol: TCP
-          readinessProbe:
-            failureThreshold: 3
-            periodSeconds: 10
-            successThreshold: 1
-            tcpSocket:
-              port: 6789
-            timeoutSeconds: 1
-          resources: {}
-          startupProbe:
-            failureThreshold: 30
-            periodSeconds: 5
-            successThreshold: 1
-            tcpSocket:
-              port: 6789
-            timeoutSeconds: 1
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
-          volumeMounts:
-          - mountPath: /config
-            name: config
-        dnsPolicy: ClusterFirst
-        enableServiceLinks: true
-        restartPolicy: Always
-        schedulerName: default-scheduler
-        securityContext: {}
-        serviceAccount: default
-        serviceAccountName: default
-        terminationGracePeriodSeconds: 30
-        volumes:
-        - name: config
-          persistentVolumeClaim:
-            claimName: nzbget-config-pvc
-  status:
-    observedGeneration: 2
-    replicas: 0
-- apiVersion: apps/v1
-  kind: ReplicaSet
-  metadata:
-    annotations:
-      deployment.kubernetes.io/desired-replicas: "1"
-      deployment.kubernetes.io/max-replicas: "1"
-      deployment.kubernetes.io/revision: "1"
-      meta.helm.sh/release-name: nzbget
-      meta.helm.sh/release-namespace: nzbget
-    creationTimestamp: "2026-04-18T19:17:50Z"
-    generation: 2
-    labels:
-      app.kubernetes.io/instance: nzbget
-      app.kubernetes.io/name: nzbget
-      pod-template-hash: 7cb9bccf6c
-    name: nzbget-7cb9bccf6c
-    namespace: nzbget
-    ownerReferences:
-    - apiVersion: apps/v1
-      blockOwnerDeletion: true
-      controller: true
-      kind: Deployment
-      name: nzbget
-      uid: d7c6ce70-0113-4dff-816e-1a39bfa699ef
-    resourceVersion: "1199192"
-    uid: 7ae8bcc8-5fb4-4600-95ba-90518ea375b8
-  spec:
-    replicas: 0
-    selector:
-      matchLabels:
-        app.kubernetes.io/instance: nzbget
-        app.kubernetes.io/name: nzbget
-        pod-template-hash: 7cb9bccf6c
-    template:
-      metadata:
-        creationTimestamp: null
-        labels:
-          app.kubernetes.io/instance: nzbget
-          app.kubernetes.io/name: nzbget
-          pod-template-hash: 7cb9bccf6c
-      spec:
-        automountServiceAccountToken: true
-        containers:
-        - image: ghcr.io/k8s-at-home/nzbget:v21.1
-          imagePullPolicy: IfNotPresent
-          livenessProbe:
-            failureThreshold: 3
-            periodSeconds: 10
-            successThreshold: 1
-            tcpSocket:
-              port: 6789
-            timeoutSeconds: 1
-          name: nzbget
-          ports:
-          - containerPort: 6789
-            name: http
-            protocol: TCP
-          readinessProbe:
-            failureThreshold: 3
-            periodSeconds: 10
-            successThreshold: 1
-            tcpSocket:
-              port: 6789
-            timeoutSeconds: 1
-          resources: {}
-          startupProbe:
-            failureThreshold: 30
-            periodSeconds: 5
-            successThreshold: 1
-            tcpSocket:
-              port: 6789
-            timeoutSeconds: 1
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
-        dnsPolicy: ClusterFirst
-        enableServiceLinks: true
-        restartPolicy: Always
-        schedulerName: default-scheduler
-        securityContext: {}
-        serviceAccount: default
-        serviceAccountName: default
-        terminationGracePeriodSeconds: 30
-  status:
-    observedGeneration: 2
-    replicas: 0
 kind: List
 metadata:
-  resourceVersion: ""
+  resourceVersion: ''
