@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{"nginx.ingress.kubernetes.io/proxy-body-size":"0","nginx.ingress.kubernetes.io/ssl-redirect":"true"},"name":"harbor-ingress","namespace":"harbor"},"spec":{"ingressClassName":"nginx","rules":[{"host":"harbor.local.lan","http":{"paths":[{"backend":{"service":{"name":"harbor","port":{"number":80}}},"path":"/","pathType":"Prefix"}]}}],"tls":[{"hosts":["harbor.local.lan"],"secretName":"harbor-tls"}]}}
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  creationTimestamp: "2026-04-22T09:35:02Z"
+  generation: 3
+  name: harbor-ingress
+  namespace: harbor
+  resourceVersion: "1626295"
+  uid: 499b7280-ff5f-41d9-b3f7-0b5c54cca211
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: harbor.local.lan
+    http:
+      paths:
+      - backend:
+          service:
+            name: harbor
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - harbor.local.lan
+    secretName: harbor-tls
+status:
+  loadBalancer:
+    ingress:
+    - ip: 192.168.1.200
